@@ -5,7 +5,6 @@ actor User as U
 boundary "Client APP" as GUI
 control "access_service" as AC
 database "access_service" as DB
-collections "cache/map" as MAP
 
 autonumber
 
@@ -26,28 +25,6 @@ U -> GUI: type password
 GUI -> AC: mutation login
 activate AC
 
-AC -> MAP: increase count try login requests per login/ip
-activate MAP
-MAP -> AC: ok
-deactivate MAP
-
-
-AC -> MAP: fetch count successful/unsuccessful try login requests per login/ip
-activate MAP
-AC <- MAP: count successful/unsuccessful try login requests per login/ip
-deactivate MAP
-alt #Pink count login requests per login/ip > threshold
-AC -> AC: count successful/unsuccessful try login requests per login/ip > threshold
-note left AC
-threshold_successful_requests_try_per_login = 10 (ttl 1ч)
-threshold_successful_requests_try_per_ip = 1000 (ttl 1ч)
-threshold_unsuccessful_requests_try_per_login = 10 (ttl 1д)
-threshold_unsuccessful_requests_try_per_ip = 1000 (ttl 1д)
-end note
-AC -> GUI: success=false && HTTP 429
-AC --> U: send notification
-end
-
 AC -> DB: fetch user by login
 activate DB
 alt #Pink no such login & password pair
@@ -60,14 +37,37 @@ DB -> AC: user
 AC -> GUI: success=false && HTTP 403
 end
 GUI -> U: email not found or password is invalid
-AC -> MAP: increase count unsuccessful login requests per login/ip
-activate MAP
-MAP -> AC: ok
-deactivate MAP
-
 else #LightBlue valid login & password pair
 DB -> AC: user
 deactivate DB
+
+DB <- AC: add user_activity
+activate DB
+note right DB
+user_activity
+end note
+DB -> AC: ok
+deactivate DB
+
+AC -> DB: check user limits per operation
+activate DB
+note right DB
+user_activity
+end note
+DB -> AC: ok
+deactivate DB
+
+alt #Pink User hit the limits
+AC -> DB: add restrictions to user
+activate DB
+note right DB
+user_restrictions
+end note
+DB -> AC: ok
+deactivate DB
+AC -> GUI: HTTP 429
+end
+
 AC -> GUI: success=true && HTTP 200
 deactivate AC
 GUI -> U: Home page
