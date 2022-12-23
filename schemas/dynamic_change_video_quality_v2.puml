@@ -1,0 +1,25 @@
+@startuml
+
+participant  Client as C
+participant  API as A
+
+C -> C: check connectivity
+
+alt successful connection
+loop while every N sec
+C -> A: get default file
+C -> C: calcualte moving average bandwidth (kbps)
+C -> C:  calculate optimal video size (for each fps)
+end
+C -> A: get list videos
+A -> C: list videos (bitrate, fps, size, scale)
+loop wile chunk exists
+C -> A: get videos chunk with best available size & fps
+A -> C: videos chunk
+C -> C: check optimal video size (for each fps)
+end
+else fail connection
+C -> C: show connection fail screen
+end
+
+@enduml

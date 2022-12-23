@@ -1,0 +1,49 @@
+@startuml
+
+title "Authentication flow. As is"
+
+actor User as U
+boundary "Client APP" as GUI
+control "access_service" as AC
+database "access_service" as DB
+
+autonumber
+
+U -> GUI: Login request
+activate U
+activate GUI
+GUI -> U: Login page
+
+alt registration
+end
+U -> GUI: type email or phone
+note right GUI
+no format validation on client side
+end note
+alt fogot password
+end
+U -> GUI: type password
+GUI -> AC: mutation login
+activate AC
+AC -> DB: fetch user by login
+activate DB
+alt #Pink no such login & password pair
+alt no such login
+DB -> AC: null
+AC -> GUI: success=false && HTTP 404
+end
+alt password hashes are not equals
+DB -> AC: user
+AC -> GUI: success=false && HTTP 403
+end
+GUI -> U: email not found or password is invalid
+else #LightBlue valid login & password pair
+DB -> AC: user
+deactivate DB
+AC -> GUI: success=true && HTTP 200
+deactivate AC
+GUI -> U: Home page
+deactivate GUI
+end
+deactivate U
+@enduml
