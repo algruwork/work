@@ -25,10 +25,10 @@ alt #Pink user.state != unverified
 AC -> AC: user.state != unverified
 AC -> GUI: HTTP 409
 else #Technology user.state == unverified
-AC -> DB: check user verefications
+AC -> DB: check user verifications
 activate DB
-alt #Technology has unfinished verefications
-AC <- DB: user verefications list
+alt #Technology has unfinished verifications
+AC <- DB: user verifications list
 deactivate DB
 AC -> DB: update user
 activate DB
@@ -79,10 +79,10 @@ alt #Pink user.state != unverified
 AC -> AC: user.state != unverified
 AC -> GUI: HTTP 409
 else #Technology user.state == unverified
-AC -> DB: check user verefications
+AC -> DB: check user verifications
 activate DB
-alt #Technology has unfinished verefications
-AC <- DB: user verefications list
+alt #Technology has unfinished verifications
+AC <- DB: user verifications list
 deactivate DB
 alt #Pink OTP are not equals or expired
 AC -> GUI: HTTP 401
