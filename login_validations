@@ -1,0 +1,22 @@
+AS IS:
+    WEB:
+        PHONE: ^(\+?[0-9]+)$
+        EMAIL: /@/g
+
+    Mobile:
+        PHONE:
+        (^(?:[+])?[0-9]{10,12}$)
+
+        EMAIL:
+        ^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+
+
+
+
+TO BE:
+    EMAIL:
+        [a-z0-9!#$%&'*+/=?^_‘{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_‘{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?
+        https://www.regular-expressions.info/email.html
+
+    PHONE:
+        ^\+(?:[0-9]?){6,14}[0-9]$
+        https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s03.html
