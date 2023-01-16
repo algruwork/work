@@ -1,3 +1,5 @@
+-- https://dbdiagram.io/d/63a5bf987d39e42284e742e0
+
 Table access_service.user_restrictions  as UR {
   id serial [pk, increment] // auto-increment
   user_uid uuid  [not null, note: 'User UID']
