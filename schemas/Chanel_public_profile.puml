@@ -1,0 +1,34 @@
+@startuml
+
+title "Get public chanel profile. As is"
+
+actor User as U
+boundary "Client APP" as GUI
+control "API" as API
+
+
+autonumber
+U -> GUI: Type some chanel name
+activate GUI
+GUI -> API: getChannel(channelUid)
+activate API
+GUI <- API: chanel info  + user info
+deactivate API
+
+GUI -> API: getPosts (channelUid, limit, offset, access, states)
+activate API
+GUI <- API: posts, postCount
+deactivate API
+
+GUI -> API: getPlaylists (channelUid, limit, offset, access, states, sort)
+activate API
+GUI <- API: posts, totalCount
+deactivate API
+
+GUI -> API: getChannels(userUid, state, limit, offset)
+activate API
+GUI <- API: channels
+deactivate API
+U <- GUI: Public chanel profile
+deactivate GUI
+@enduml
