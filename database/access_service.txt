@@ -1,0 +1,50 @@
+Table access_service.user_restrictions  as UR {
+  id serial [pk, increment] // auto-increment
+  user_uid uuid  [not null, note: 'User UID']
+  created_at timestamp [default: `now()`, note: 'Date create']
+  active_till timestamp [note: 'Date restrictions ends']
+  limit_id int [note: 'Operation limit id']
+}
+
+Table access_service.user_limit_types  as ULT {
+  id serial [pk, increment, ref: < UR.limit_id]
+  code string [not null, note: 'Operation limit code']
+  threshold_login_per_hour integer [note: 'Operation login limit value per hour']
+  threshold_ip_per_hour integer [note: 'Operation ip limit value per hour']
+  cooldown_period integer [note: 'Seconds to restrict operation for user']
+  description string [note: 'Limit description']
+  otp_vereficated_actions_id int [note: 'ID type requested operation with OTP confirmation']
+}
+
+Table access_service.user_otp_vereficated_actions {
+  id serial [pk, increment, ref: < ULT.otp_vereficated_actions_id] // auto-increment
+  code string [not null, note: 'Type requested operation with OTP confirmation']
+}
+
+Table access_service.user_activity_type as UAT {
+  id serial [pk, increment, note: 'ID']
+  date_create timestamp [note: 'Date create']
+  date_update timestamp [note: 'Date update']
+  email varchar(254) [note: 'Email address']
+  ip inet [not null, note: 'IP address']
+  mobile_phone varchar(20) [note: 'Mobile phone number']
+  user_activity_type access_service.user_activity_type
+  user_uid uuid  [not null, note: 'User UID']
+
+}
+
+Enum access_service.user_activity_type {
+  EDIT_MOBILE_PHONE
+  VERIFY_MOBILE_PHONE
+  RESET_PASSWORD_CONFIRM
+  LOGIN_SOCIAL_NETWORK
+  EDIT_EMAIL
+  EDIT_NAME
+  RESET_PASSWORD_REQUEST
+  LOGIN_MOBILE_PHONE
+  EDIT_PASSWORD
+  LOGIN_EMAIL
+  EDIT_AVATAR
+  EDIT_USERNAME
+  EDIT_BIRTHDAY
+}
