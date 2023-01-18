@@ -33,7 +33,7 @@ alt password hashes are not equals
 AC -> GUI: success=false && HTTP 403
 end
 GUI -> U: email not found or password is invalid
-else #LightBlue valid login & password pair
+else #Technology valid login & password pair
 
 alt #Pink User hit the limits
 AC -> GUI: HTTP 429
