@@ -4,7 +4,6 @@ title "Authentication flow. To be"
 actor User as U
 boundary "Client APP" as GUI
 control "access_service" as AC
-database "access_service" as DB
 
 autonumber
 
@@ -19,52 +18,24 @@ U -> GUI: type email or phone
 note right GUI
 check value format
 end note
-alt fogot password
+alt forgot password
 end
 U -> GUI: type password
 GUI -> AC: mutation login
 activate AC
 
-AC -> DB: fetch user by login
-activate DB
+
 alt #Pink no such login & password pair
 alt no such login
-DB -> AC: null
 AC -> GUI: success=false && HTTP 404
 end
 alt password hashes are not equals
-DB -> AC: user
 AC -> GUI: success=false && HTTP 403
 end
 GUI -> U: email not found or password is invalid
 else #LightBlue valid login & password pair
-DB -> AC: user
-deactivate DB
-
-DB <- AC: add user_activity
-activate DB
-note right DB
-user_activity
-end note
-DB -> AC: ok
-deactivate DB
-
-AC -> DB: check user limits per operation
-activate DB
-note right DB
-user_activity
-end note
-DB -> AC: ok
-deactivate DB
 
 alt #Pink User hit the limits
-AC -> DB: add restrictions to user
-activate DB
-note right DB
-user_restrictions
-end note
-DB -> AC: ok
-deactivate DB
 AC -> GUI: HTTP 429
 end
 
