@@ -54,6 +54,7 @@ end
 
 alt #Pink The limit of registrations per day has been exceeded
 AC -> GUI: HTTP 429
+GUI -> GUI: Disable Request OTP button for {retryAfter} sec
 end
 
 alt #Pink OTP are not equals or expired
