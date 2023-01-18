@@ -1,11 +1,10 @@
 @startuml
 
-title "Registration flow. As is"
+title "Registration flow. To be"
 
 actor User as U
 boundary "Client APP" as GUI
 control "access_service" as AC
-database "access_service" as DB
 
 autonumber
 
@@ -16,113 +15,59 @@ GUI -> U: registration page
 U -> GUI: type login & email
 GUI -> AC: mutation registerEmail or registerMobile
 activate AC
-AC -> DB: check login
-activate DB
-alt #Technology login is already exist
-AC <- DB: user
-deactivate DB
-AC [#RED]-> DB: users_activity
-activate DB #Red
-DB [#RED]-> AC: ok
-deactivate DB
-alt #Red Count user registration request > limits
+
+
+alt #Pink Unsuccessful response
+
+alt #Pink bad formed request
+AC -> GUI: HTTP 400
+end
+
+alt #Pink user.state != unverified
+AC -> GUI: HTTP 409
+end
+
+alt #Pink The limit of registrations per day has been exceeded
 AC -> GUI: HTTP 429
 end
-alt #Pink user.state != unverified
-AC -> AC: user.state != unverified
-AC -> GUI: HTTP 409
-else #Technology user.state == unverified
-AC -> DB: check user verifications
-activate DB
-alt #Technology has unfinished verifications
-AC <- DB: user verifications list
-deactivate DB
-AC -> DB: update user
-activate DB
-AC <- DB: ok
-deactivate DB
-end
-end
-else #Business login is not exist
-DB -> AC: null
 
-
-AC -> DB: create user
-activate DB
-
-AC <- DB: user
-note left DB
-unverified user
-end note
-deactivate DB
-end
-AC -> DB: create new OTP
-activate DB
-note left DB
-consumed = False
-end note
-AC <- DB: OTP
-deactivate DB
+else #Technology Successful response
 AC --> U: OTP
-AC [#RED]-> DB: add user activity
-activate DB #RED
-note left DB
-REGISTER_EMAIL or REGISTER_MOBILE_PHONE
-end note
-DB [#RED]-> AC: ok
-deactivate DB
 AC -> GUI: HTTP 200
 deactivate AC
 
-
 GUI -> U: OTP page
-U -> GUI: type OTP
-GUI -> AC: mutation verifyEmail or verifyMobile
-activate AC
-AC -> DB: check login
-activate DB
+end
 
+U -> GUI: type OTP
+GUI -> AC: mutation verifyOneTimePassword
+activate AC
+
+alt #Pink Unsuccessful response
 alt #Pink login is not exist
-DB -> AC: null
 AC -> GUI: HTTP 404
-else #Technology login is already exist
-AC <- DB: user
-deactivate DB
+end
 
 alt #Pink user.state != unverified
-AC -> AC: user.state != unverified
 AC -> GUI: HTTP 409
-else #Technology user.state == unverified
-AC -> DB: check user verifications
-activate DB
-alt #Technology has unfinished verifications
-AC <- DB: user verifications list
-deactivate DB
+end
+
+alt #Pink The limit of registrations per day has been exceeded
+AC -> GUI: HTTP 429
+end
+
 alt #Pink OTP are not equals or expired
 AC -> GUI: HTTP 401
 end
-AC -> DB: OTP consumed = True, user.state = ACTIVE
-activate DB
-DB -> AC: user
-deactivate DB
 
-AC [#RED]-> DB: add user activity
-activate DB #RED
-note left DB
-VERIFY_EMAIL or VERIFY_MOBILE_PHONE
-end note
-DB [#RED]-> AC: ok
-deactivate DB
-
-AC -> DB: create token, refreshToken
-activate DB
-DB -> AC: token, refreshToken
-deactivate DB
+else #Technology Successful response
 AC -> GUI: HTTP 200
 deactivate AC
+end
+
+GUI -> U: Let's vidaq
 deactivate GUI
-end
-end
-end
 deactivate U
+
+
 @enduml
