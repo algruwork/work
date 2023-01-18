@@ -58,11 +58,10 @@ end
 
 alt #Pink OTP are not equals or expired
 AC -> GUI: HTTP 401
-GUI [#Red]-> GUI: Disable Request OTP button for 60 sec
+GUI -> GUI: Disable Request OTP button for 60 sec
 ...
-GUI [#Red]-> AC: Request another OTP\n(mutation resetPasswordEmail or resetPasswordMobile)
-GUI [#Red]-> U:  Type OTP password page
 end
+
 
 else #Technology Successful response
 AC -> GUI: HTTP 200
@@ -72,6 +71,5 @@ end
 GUI -> U: Let's vidaq
 deactivate GUI
 deactivate U
-
 
 @enduml
