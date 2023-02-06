@@ -45,7 +45,7 @@ end
 
 GUI -> U: Input OTP page
 U -> GUI: Type OTP
-GUI -> AC: mutation verifyOneTimePassword(OTP, operationType)
+GUI -> AC: mutation verifyOneTimePassword(OTP, operationType=EDIT_PHONE_NUMBER)
 note left AC
 Подтверждаем доступ к email для операции и получаем токен
 end note
