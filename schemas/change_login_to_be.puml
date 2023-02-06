@@ -1,0 +1,89 @@
+@startuml
+actor User as U
+participant App as GUI
+control access_service as AC
+database change_email_tokens as CLT
+
+title "Change email or phone number"
+autonumber
+U -> GUI: Edit email
+activate U
+activate GUI
+GUI -> U: Input email
+U -> GUI: Email
+GUI -> AC: requestOneTimePassword(new_email, UPDATE_EMAIL)
+activate AC
+
+alt #Pink Unsuccessful response
+alt #Pink User does not exist
+AC -> GUI: HTTP 404
+end
+alt #Pink Email already exist
+AC -> GUI: HTTP 404, already_exist
+end
+else #Technology Successful response
+AC -> CLT: add unconsumed token
+note left CLT
+id, old email, new email, user_uid,
+token, unconsumed sign, expiration date,
+date create
+end note
+activate CLT
+CLT -> AC: ok
+deactivate CLT
+AC --> U: OTP
+AC -> GUI: HTTP 200, ok
+deactivate AC
+end
+
+GUI -> U: Input OTP page
+U -> GUI: Type OTP
+GUI -> AC: mutation verifyOneTimePassword(new_email)
+activate AC
+AC -> CLT: check OTP
+activate CLT
+CLT -> AC: ok
+deactivate CLT
+
+alt #Pink Unsuccessful response
+alt #Pink User does not exist
+AC -> GUI: HTTP 404
+end
+
+alt #Pink otp.state != unconsumed
+AC -> GUI: HTTP 409
+end
+
+alt #Pink OTP are not equals or expired
+AC -> GUI: HTTP 401
+GUI -> GUI: Disable Request OTP button for 60 sec
+...
+end
+
+
+else #Technology Successful response
+AC -> GUI: HTTP 200
+deactivate AC
+end
+
+GUI -> AC: editEmail(new_email)
+activate AC
+AC -> CLT: check(new_email, user_uid)
+activate CLT
+CLT -> AC: ok
+deactivate CLT
+alt #Pink Unsuccessful response
+alt #Pink otp.state != consumed
+AC -> GUI: HTTP 409
+end
+alt #Pink User does not exist
+AC -> GUI: HTTP 404
+end
+else #Technology Successful response
+AC -> GUI: HTTP 200, ok
+deactivate AC
+end
+GUI -> U: Edit Profile page
+deactivate GUI
+deactivate U
+@enduml
