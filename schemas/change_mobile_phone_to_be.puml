@@ -1,0 +1,92 @@
+@startuml
+actor User as U
+participant App as GUI
+control access_service as AC
+database user_mobile_phone_verifications as UMVT
+database users as UD
+
+title "Change mobile phone number"
+autonumber
+U -> GUI: Edit phone number
+activate U
+activate GUI
+GUI -> U: Input phone number
+U -> GUI: Phone number
+GUI -> AC: mutation editMobilePhone(phone_number)
+note left AC
+Запрашиваем ОТП для операции
+end note
+activate AC
+
+alt #Pink Unsuccessful response
+
+alt #Pink Access token invalid
+AC -> GUI: HTTP 401, user
+end
+
+alt #Pink User does not exist
+AC -> GUI: HTTP 404
+end
+
+alt #Pink Email already exist
+AC -> GUI: HTTP 409, email
+end
+
+else #Technology Successful response
+AC -> UMVT: create unconsumed OTP token
+
+activate UMVT
+UMVT -> AC:
+deactivate UMVT
+AC --> U: OTP
+AC -> GUI: HTTP 200, ok
+deactivate AC
+end
+
+GUI -> U: Input OTP page
+U -> GUI: Type OTP
+GUI -> AC: mutation verifyOneTimePassword(OTP, operationType)
+note left AC
+Подтверждаем доступ к email для операции и получаем токен
+end note
+
+activate AC
+AC -> UMVT: fetch OTP token
+activate UMVT
+UMVT -> AC:
+deactivate UMVT
+
+alt #Pink Unsuccessful response
+
+alt #Pink User does not exist
+AC -> GUI: HTTP 404
+end
+
+alt #Pink otp.state != unconsumed
+AC -> GUI: HTTP 409
+end
+
+alt #Pink OTP are not equals or expired
+AC -> GUI: HTTP 401
+GUI -> GUI: Disable Request OTP button for 60 sec
+...
+end
+
+
+else #Technology Successful response
+AC -> UMVT: consume OTP token
+activate UMVT
+UMVT -> AC:
+deactivate UMVT
+AC -> UD: change phone number
+activate UD
+UD -> AC:
+deactivate UD
+AC -> GUI: HTTP 200
+deactivate AC
+end
+
+GUI -> U: Edit Profile page
+deactivate GUI
+deactivate U
+@enduml

@@ -2,7 +2,7 @@
 actor User as U
 participant App as GUI
 control access_service as AC
-database user_email_verifications as CLT
+database user_email_verifications as UMVT
 database users as UD
 
 title "Change email"
@@ -33,11 +33,11 @@ AC -> GUI: HTTP 409, email
 end
 
 else #Technology Successful response
-AC -> CLT: create unconsumed OTP token
+AC -> UMVT: create unconsumed OTP token
 
-activate CLT
-CLT -> AC:
-deactivate CLT
+activate UMVT
+UMVT -> AC:
+deactivate UMVT
 AC --> U: OTP
 AC -> GUI: HTTP 200, ok
 deactivate AC
@@ -51,10 +51,10 @@ note left AC
 end note
 
 activate AC
-AC -> CLT: fetch OTP token
-activate CLT
-CLT -> AC:
-deactivate CLT
+AC -> UMVT: fetch OTP token
+activate UMVT
+UMVT -> AC:
+deactivate UMVT
 
 alt #Pink Unsuccessful response
 
@@ -74,10 +74,10 @@ end
 
 
 else #Technology Successful response
-AC -> CLT: consume OTP token
-activate CLT
-CLT -> AC:
-deactivate CLT
+AC -> UMVT: consume OTP token
+activate UMVT
+UMVT -> AC:
+deactivate UMVT
 AC -> UD: change Email
 activate UD
 UD -> AC:
