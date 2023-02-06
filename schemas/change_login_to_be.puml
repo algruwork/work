@@ -3,6 +3,7 @@ actor User as U
 participant App as GUI
 control access_service as AC
 database change_email_tokens as CLT
+database users as UD
 
 title "Change email"
 autonumber
@@ -11,19 +12,22 @@ activate U
 activate GUI
 GUI -> U: Input email
 U -> GUI: Email
-GUI -> AC: requestOneTimePassword(new_email, UPDATE_EMAIL)
+GUI -> AC: mutation requestOneTimePassword(new_email, UPDATE_EMAIL)
 note left AC
 Запрашиваем ОТП для операции
 end note
 activate AC
 
 alt #Pink Unsuccessful response
+
 alt #Pink User does not exist
 AC -> GUI: HTTP 404
 end
+
 alt #Pink Email already exist
 AC -> GUI: HTTP 404, already_exist
 end
+
 else #Technology Successful response
 AC -> CLT: add unconsumed token
 note left CLT
@@ -31,6 +35,7 @@ id, old email, new email, user_uid,
 token, unconsumed sign, expiration date,
 date create
 end note
+
 activate CLT
 CLT -> AC: ok
 deactivate CLT
@@ -45,6 +50,7 @@ GUI -> AC: mutation verifyOneTimePassword(new_email)
 note left AC
 Подтверждаем доступ к email для операции и получаем токен
 end note
+
 activate AC
 AC -> CLT: check OTP
 activate CLT
@@ -52,6 +58,7 @@ CLT -> AC: ok
 deactivate CLT
 
 alt #Pink Unsuccessful response
+
 alt #Pink User does not exist
 AC -> GUI: HTTP 404
 end
@@ -68,27 +75,42 @@ end
 
 
 else #Technology Successful response
+
 AC -> GUI: HTTP 200
 deactivate AC
 end
 
-GUI -> AC: editEmail(new_email)
+GUI -> AC: mutation editEmail(new_email)
 activate AC
 note left AC
 Изменяем email
 end note
+
 AC -> CLT: check(new_email, user_uid)
 activate CLT
 CLT -> AC: ok
 deactivate CLT
+
 alt #Pink Unsuccessful response
-alt #Pink otp.state != consumed
-AC -> GUI: HTTP 409
+
+alt #Pink Forbidden
+AC -> GUI: HTTP 403
 end
+
 alt #Pink User does not exist
 AC -> GUI: HTTP 404
 end
+
+alt #Pink otp.state != consumed
+AC -> GUI: HTTP 409
+end
+
 else #Technology Successful response
+
+AC -> UD: update email(new_email)
+activate UD
+UD -> AC: ok
+deactivate UD
 AC -> GUI: HTTP 200, ok
 deactivate AC
 end
