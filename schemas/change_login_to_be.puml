@@ -4,7 +4,7 @@ participant App as GUI
 control access_service as AC
 database change_email_tokens as CLT
 
-title "Change email or phone number"
+title "Change email"
 autonumber
 U -> GUI: Edit email
 activate U
@@ -12,6 +12,9 @@ activate GUI
 GUI -> U: Input email
 U -> GUI: Email
 GUI -> AC: requestOneTimePassword(new_email, UPDATE_EMAIL)
+note left AC
+Запрашиваем ОТП для операции
+end note
 activate AC
 
 alt #Pink Unsuccessful response
@@ -39,6 +42,9 @@ end
 GUI -> U: Input OTP page
 U -> GUI: Type OTP
 GUI -> AC: mutation verifyOneTimePassword(new_email)
+note left AC
+Подтверждаем доступ к email для операции и получаем токен
+end note
 activate AC
 AC -> CLT: check OTP
 activate CLT
@@ -68,6 +74,9 @@ end
 
 GUI -> AC: editEmail(new_email)
 activate AC
+note left AC
+Изменяем email
+end note
 AC -> CLT: check(new_email, user_uid)
 activate CLT
 CLT -> AC: ok
