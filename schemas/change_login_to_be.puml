@@ -2,7 +2,7 @@
 actor User as U
 participant App as GUI
 control access_service as AC
-database change_email_tokens as CLT
+database user_email_verifications as CLT
 database users as UD
 
 title "Change email"
@@ -12,7 +12,7 @@ activate U
 activate GUI
 GUI -> U: Input email
 U -> GUI: Email
-GUI -> AC: mutation requestOneTimePassword(new_email, UPDATE_EMAIL)
+GUI -> AC: mutation editEmail(newEmail)
 note left AC
 Запрашиваем ОТП для операции
 end note
@@ -20,24 +20,23 @@ activate AC
 
 alt #Pink Unsuccessful response
 
+alt #Pink Access token invalid
+AC -> GUI: HTTP 401, user
+end
+
 alt #Pink User does not exist
 AC -> GUI: HTTP 404
 end
 
 alt #Pink Email already exist
-AC -> GUI: HTTP 404, already_exist
+AC -> GUI: HTTP 409, email
 end
 
 else #Technology Successful response
-AC -> CLT: add unconsumed token
-note left CLT
-id, old email, new email, user_uid,
-token, unconsumed sign, expiration date,
-date create
-end note
+AC -> CLT: create unconsumed OTP token
 
 activate CLT
-CLT -> AC: ok
+CLT -> AC:
 deactivate CLT
 AC --> U: OTP
 AC -> GUI: HTTP 200, ok
@@ -46,15 +45,15 @@ end
 
 GUI -> U: Input OTP page
 U -> GUI: Type OTP
-GUI -> AC: mutation verifyOneTimePassword(new_email)
+GUI -> AC: mutation verifyOneTimePassword(OTP, operationType)
 note left AC
 Подтверждаем доступ к email для операции и получаем токен
 end note
 
 activate AC
-AC -> CLT: check OTP
+AC -> CLT: fetch OTP token
 activate CLT
-CLT -> AC: ok
+CLT -> AC:
 deactivate CLT
 
 alt #Pink Unsuccessful response
@@ -75,45 +74,18 @@ end
 
 
 else #Technology Successful response
-
+AC -> CLT: consume OTP token
+activate CLT
+CLT -> AC:
+deactivate CLT
+AC -> UD: change Email
+activate UD
+UD -> AC:
+deactivate UD
 AC -> GUI: HTTP 200
 deactivate AC
 end
 
-GUI -> AC: mutation editEmail(new_email)
-activate AC
-note left AC
-Изменяем email
-end note
-
-AC -> CLT: check(new_email, user_uid)
-activate CLT
-CLT -> AC: ok
-deactivate CLT
-
-alt #Pink Unsuccessful response
-
-alt #Pink Forbidden
-AC -> GUI: HTTP 403
-end
-
-alt #Pink User does not exist
-AC -> GUI: HTTP 404
-end
-
-alt #Pink otp.state != consumed
-AC -> GUI: HTTP 409
-end
-
-else #Technology Successful response
-
-AC -> UD: update email(new_email)
-activate UD
-UD -> AC: ok
-deactivate UD
-AC -> GUI: HTTP 200, ok
-deactivate AC
-end
 GUI -> U: Edit Profile page
 deactivate GUI
 deactivate U
