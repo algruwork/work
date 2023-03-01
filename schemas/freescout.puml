@@ -1,0 +1,66 @@
+@startuml
+
+title "Report flow"
+
+actor User as U
+boundary "Client APP" as GUI
+box "vidaq" #LightBlue
+control "complaints" as C
+control "access" as A
+end box
+control "freescout" as F
+
+autonumber
+
+U -> GUI: submit complaint
+activate GUI
+GUI -> C: query getComplaintTypes
+activate C
+C -> GUI: HTTP 200, Ok
+deactivate C
+
+GUI -> U:
+U -> GUI: select topic & \nadd description
+
+GUI -> C: mutation createComplaint
+activate C
+C -> A: query getUser
+activate A
+A -> C: HTTP 200, Ok
+deactivate A
+
+alt #LightYellow "if user have not freescoutId"
+C -> F: POST /users
+activate F
+F -> C: HTTP 201, Ok
+deactivate F
+C -> A: mutation updateUser
+activate A
+A -> C: HTTP 20, Ok
+deactivate A
+end
+
+C -> F: GET /conversations
+activate F
+F -> C: HTTP 200, Ok
+deactivate F
+alt #LightGreen "conversation doesn't exist"
+C -> F: POST /conversations
+activate F
+F -> C: HTTP 200, Ok
+else #LightYellow "conversation exist"
+C -> F: POST /conversations/{id}/threads
+F -> C: HTTP 200, Ok
+alt "If any new tag (report type)"
+C -> F: POST /conversations/{conversationId}/tags
+F -> C: HTTP 200, Ok
+deactivate F
+end
+end
+
+C -> GUI: HTTP 200, Ok
+deactivate C
+GUI -> U: thank you for report
+deactivate GUI
+
+@enduml
