@@ -20,7 +20,7 @@ activate A
 A -> C: HTTP 200, Ok
 deactivate A
 
-alt #LightYellow "if user have not freescoutId"
+alt #LightGrey "if user have not freescoutId"
 C -> F: POST /users
 activate F
 F -> C: HTTP 201, Ok
@@ -53,7 +53,7 @@ C -> CS: Add row
 activate CS
 CS -> C: Ok
 deactivate CS
-else #LightYellow "conversation exist"
+else #LightGrey "conversation exist"
 C -> F: GET conversations/{conversationId}
 activate F
 note left F
