@@ -6,8 +6,9 @@ title "Create complaint flow"
 boundary "Client APP" as GUI
 box "vidaq" #LightBlue
 control "complaints" as C
-control "access" as A
+database "complaints_service" as CS
 end box
+control "access" as A
 control "freescout" as F
 
 autonumber
@@ -26,23 +27,59 @@ F -> C: HTTP 201, Ok
 deactivate F
 C -> A: mutation updateUser
 activate A
-A -> C: HTTP 20, Ok
+note left A
+add freescout_id to user
+end note
+A -> C: HTTP 200, Ok
 deactivate A
 end
 
-C -> F: GET /conversations
-activate F
-F -> C: HTTP 200, Ok
-deactivate F
+C -> CS: select conversations by content uid
+activate CS
+note left CS
+Check if conversation by this content uid is already exist
+end note
+CS -> C: Ok
+deactivate CS
+
+
+
 alt #LightGreen "conversation doesn't exist"
 C -> F: POST /conversations
 activate F
 F -> C: HTTP 200, Ok
+deactivate F
+C -> CS: Add row
+activate CS
+CS -> C: Ok
+deactivate CS
 else #LightYellow "conversation exist"
-C -> F: POST /conversations/{id}/threads
+C -> F: GET conversations/{conversationId}
+activate F
+note left F
+getting conversation details
+end note
 F -> C: HTTP 200, Ok
+deactivate F
+C -> F: POST /conversations/{id}/threads
+activate F
+note left F
+create new thread
+end note
+F -> C: HTTP 200, Ok
+deactivate F
+
+C -> F: PUT api/conversations/{conversationId}
+activate F
+note left F
+update status = active
+end note
+F -> C: HTTP 200, Ok
+deactivate F
+
 alt "If any new tag (report type)"
 C -> F: POST /conversations/{conversationId}/tags
+activate F
 F -> C: HTTP 200, Ok
 deactivate F
 end
