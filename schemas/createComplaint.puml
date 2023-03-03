@@ -15,12 +15,22 @@ autonumber
 
 GUI -> C: mutation createComplaint
 activate C
+note left C
+Check if user or channel has freescout_id
+end note
+alt #LightGreen "if no channel_uid in token"
 C -> A: query getUser
 activate A
 A -> C: HTTP 200, Ok
 deactivate A
+else #LightGrey Channel_uid in token"
+C -> A: query getChannel
+activate A
+A -> C: HTTP 200, Ok
+deactivate A
+end
 
-alt #LightGrey "if user have not freescoutId"
+alt #LightGrey "if user/channel have not freescoutId"
 C -> F: POST /users
 activate F
 F -> C: HTTP 201, Ok
@@ -28,7 +38,7 @@ deactivate F
 C -> A: mutation updateUser
 activate A
 note left A
-add freescout_id to user
+Add freescout_id to user
 end note
 A -> C: HTTP 200, Ok
 deactivate A
@@ -57,14 +67,14 @@ else #LightGrey "conversation exist"
 C -> F: GET conversations/{conversationId}
 activate F
 note left F
-getting conversation details
+Getting conversation details
 end note
 F -> C: HTTP 200, Ok
 deactivate F
 C -> F: POST /conversations/{id}/threads
 activate F
 note left F
-create new thread
+Create new thread
 end note
 F -> C: HTTP 200, Ok
 deactivate F
@@ -72,7 +82,7 @@ deactivate F
 C -> F: PUT api/conversations/{conversationId}
 activate F
 note left F
-update status = active
+Update status = active
 end note
 F -> C: HTTP 200, Ok
 deactivate F
