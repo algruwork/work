@@ -19,12 +19,12 @@ note left C
 Check if user or channel has freescout_id
 end note
 alt #LightGreen "if no channel_uid in token"
-C -> A: query getUser
+C -> A: GET /users/{user_uid}
 activate A
 A -> C: HTTP 200, Ok
 deactivate A
 else #LightGrey Channel_uid in token"
-C -> A: query getChannel
+C -> A: GET /channel/{channel_uid}/
 activate A
 A -> C: HTTP 200, Ok
 deactivate A
@@ -35,7 +35,7 @@ C -> F: POST /users
 activate F
 F -> C: HTTP 201, Ok
 deactivate F
-C -> A: mutation updateUser
+C -> A: PUT /user/(user_uid)
 activate A
 note left A
 Add freescout_id to user
