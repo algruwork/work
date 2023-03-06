@@ -24,35 +24,73 @@ U -> GUI: select topic & \nadd description
 
 GUI -> C: mutation createComplaint
 activate C
-C -> A: query getUser
+note left C
+Check if user or channel has freescout_id
+end note
+alt #LightGreen "if no channel_uid in token"
+C -> A: GET /users/{user_uid}
 activate A
 A -> C: HTTP 200, Ok
 deactivate A
+else #LightGrey Channel_uid in token"
+C -> A: GET /channel/{channel_uid}/
+activate A
+A -> C: HTTP 200, Ok
+deactivate A
+end
 
-alt #LightYellow "if user have not freescoutId"
+alt #LightGrey "if user/channel have not freescoutId"
 C -> F: POST /users
 activate F
 F -> C: HTTP 201, Ok
 deactivate F
-C -> A: mutation updateUser
+C -> A: PUT /user/(user_uid)
 activate A
-A -> C: HTTP 20, Ok
+note left A
+Add freescout_id to user
+end note
+A -> C: HTTP 200, Ok
 deactivate A
 end
 
-C -> F: GET /conversations
-activate F
-F -> C: HTTP 200, Ok
-deactivate F
+C -> CS: select conversations by content uid
+activate CS
+note left CS
+Check if conversation by this content uid is already exist
+end note
+CS -> C: Ok
+deactivate CS
+
+
+
 alt #LightGreen "conversation doesn't exist"
 C -> F: POST /conversations
 activate F
 F -> C: HTTP 200, Ok
-else #LightYellow "conversation exist"
-C -> F: POST /conversations/{id}/threads
+deactivate F
+C -> CS: Add row
+activate CS
+CS -> C: Ok
+deactivate CS
+else #LightGrey "conversation exist"
+C -> F: GET conversations/{conversationId}
+activate F
+note left F
+Getting conversation details
+end note
 F -> C: HTTP 200, Ok
+deactivate F
+C -> F: POST /conversations/{id}/threads
+activate F
+note left F
+Create new thread
+end note
+F -> C: HTTP 200, Ok
+deactivate F
+
 alt "If any new tag (report type)"
 C -> F: POST /conversations/{conversationId}/tags
+activate F
 F -> C: HTTP 200, Ok
 deactivate F
 end
