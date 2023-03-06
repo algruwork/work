@@ -79,14 +79,6 @@ end note
 F -> C: HTTP 200, Ok
 deactivate F
 
-C -> F: PUT api/conversations/{conversationId}
-activate F
-note left F
-Update status = active
-end note
-F -> C: HTTP 200, Ok
-deactivate F
-
 alt "If any new tag (report type)"
 C -> F: POST /conversations/{conversationId}/tags
 activate F
