@@ -63,6 +63,7 @@ C -> CS: Add row
 activate CS
 CS -> C: Ok
 deactivate CS
+
 else #LightGrey "conversation exist"
 C -> F: GET conversations/{conversationId}
 activate F
@@ -78,14 +79,15 @@ Create new thread
 end note
 F -> C: HTTP 200, Ok
 deactivate F
+end
 
-alt "If any new tag (report type)"
-C -> F: POST /conversations/{conversationId}/tags
+C -> F: PUT /conversations/{conversationId}/tags
 activate F
+note left F
+Add/update tag (complaint type)
+end note
 F -> C: HTTP 200, Ok
 deactivate F
-end
-end
 
 C -> GUI: HTTP 200, Ok
 deactivate C
