@@ -46,7 +46,8 @@ insert into complaints_service.complaint_categorys (name_en)
 ('Privacy'),
 ('Infringes my rights'),
 ('Impersonation'),
-('Captions issue');
+('Captions issue'),
+('Other');
 
 insert into complaints_service.complaint_categorys_content_types (content_type_id, complaint_category_id)
 	values
@@ -60,6 +61,7 @@ insert into complaints_service.complaint_categorys_content_types (content_type_i
 	(1, 13),
 	(1, 15),
 	(1, 17),
+	(1, 18),
 	(2, 1),
 	(2, 3),
 	(2, 5),
@@ -69,6 +71,7 @@ insert into complaints_service.complaint_categorys_content_types (content_type_i
 	(2, 11),
 	(2, 14),
 	(2, 16),
+	(2, 18),
 	(3, 1),
 	(3, 3),
 	(3, 5),
@@ -78,6 +81,7 @@ insert into complaints_service.complaint_categorys_content_types (content_type_i
 	(3, 11),
 	(3, 14),
 	(3, 16),
+	(3, 18),
 	(4, 2),
 	(4, 4),
 	(4, 6),
@@ -86,17 +90,20 @@ insert into complaints_service.complaint_categorys_content_types (content_type_i
 	(4, 11),
 	(4, 12),
 	(4, 13),
+	(4, 18),
 	(5, 1),
 	(5, 3),
 	(5, 5),
 	(5, 7),
 	(5, 9),
 	(5, 6),
+	(5, 18),
 	(6, 1),
 	(6, 3),
 	(6, 5),
 	(6, 7),
 	(6, 9),
-	(6, 6);
+	(6, 6),
+	(6, 18);
 
 
