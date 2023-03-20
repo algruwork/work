@@ -1,0 +1,86 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title "View video flow"
+
+actor User as U
+boundary "Client APP" as GUI
+box "studio" #LightBlue
+control "API" as C
+
+autonumber
+
+
+U -> GUI: click on post
+activate GUI
+GUI -> C: getPost
+activate C
+C -> GUI: HTTP 200, OK
+deactivate C
+note left GUI
+Get info about post
+end note
+
+GUI -> C: getEmojis
+activate C
+note left GUI
+Get emojis types
+end note
+C -> GUI: HTTP 200, OK
+deactivate C
+
+GUI -> C: getPostParentComments
+activate C
+note left GUI
+Get comments
+end note
+C -> GUI: HTTP 200, OK
+deactivate C
+
+GUI -> C: getUserPostWatchHistory
+activate C
+note left GUI
+Get watch history.
+If user watched video, then
+start video from last lastTimestamp - 5 sec
+end note
+C -> GUI: HTTP 200, OK
+deactivate C
+
+GUI -> C: get master manifest
+activate C
+C -> GUI: HTTP 200, OK
+deactivate C
+
+GUI -> C: get index manifest
+activate C
+C -> GUI: HTTP 200, OK
+deactivate C
+
+loop "get N chanks"
+GUI -> C: get video chunks
+activate C
+C -> GUI: HTTP 200, OK
+deactivate C
+GUI -> U: show video
+... after 5 sec watching...
+
+GUI -> C: logPostWatch
+activate C
+note left GUI
+Add last watched time
+end note
+C -> GUI: HTTP 200, OK
+deactivate C
+end loop
+
+alt if user change player settings
+GUI -> C: updateUserPlayerSettings
+activate C
+C -> GUI: HTTP 200, OK
+deactivate C
+end alt
+
+GUI -> U:
+deactivate GUI
+
+@enduml
