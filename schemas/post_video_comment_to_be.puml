@@ -1,6 +1,6 @@
 @startuml
 'https://plantuml.com/sequence-diagram
-title "Post video flow. AS IS"
+title "Post video flow. TO BE"
 
 actor User as U
 boundary "Client APP" as GUI
@@ -35,22 +35,14 @@ note left C
 end note
 
 C -> GUI: ok, http 200
-deactivate  C
-end
-
-GUI -> C: mutation loginChannel
-activate C
-note left C
-Получаем токен канала
-end note
-C -> GUI: ok, http 200
 deactivate C
+end
 
 U --> GUI: Выбор видео
 GUI -> C: mutation createPost
 activate C
 note left C
-Загружаем видео (создаем пост) с токеном канала
+Загружаем видео (создаем пост) с токеном пользователя (автора канала) и channelUid
 end note
 C -> GUI: ok, http 200
 deactivate C
@@ -60,7 +52,7 @@ U -> GUI: Добавить описание поста
 GUI -> C: mutation updatePost
 activate C
 note left C
-Обновляем пост с токеном канала
+Обновляем пост с токеном пользователя (автора канала) и channelUid
 end note
 C -> GUI: ok, http 200
 deactivate C
