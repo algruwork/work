@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title "Post video comment flow"
+
+actor User as U
+boundary "Client APP" as GUI
+box "studio" #LightBlue
+control "API" as C
+
+autonumber
+
+@enduml
