@@ -997,12 +997,7 @@ type Query {
   """
   Получить кол-во непрочитанных уведомлений
   """
-  getNotificationsUnreadCount: NotificationsUnreadCountType @deprecated(reason: "Use getNotificationsUnwatchedCount instead.")
-
-  """
-  Получить кол-во непросмотренных уведомлений
-  """
-  getNotificationsUnwatchedCount: NotificationsUnwatchedCountType
+  getNotificationsUnreadCount: NotificationsUnreadCountType
 
   """
   Получить список категорий жалоб, которые могут направить пользователи
@@ -1072,6 +1067,7 @@ type PostType {
   favoritedDate: DateTime
   likedDate: DateTime
   watchDate: DateTime
+  videoCommentsCount: Int
 }
 
 """
@@ -1193,7 +1189,6 @@ type UserType {
   name: String
   state: UserStateEnum
   avatar: String
-  defaultAvatarColorStyle: String
   username: String
   birthday: Date
   mobilePhone: String
@@ -2143,10 +2138,6 @@ type ActivityNotificationsType {
   offset: Int
   totalCount: Int
   totalUnreadCount: Int
-  """
-  Колличество не просмотренных уведомлений с типом Activity
-  """
-  totalUnwatchedActivitiesCount: Int
 }
 
 type ActivityNotificationType {
@@ -2161,7 +2152,6 @@ type ActivityNotificationType {
   links: [Dictionary]
   postCoverPath: String
   readStatus: ReadStatus
-  watchStatus: WatchStatus
   hiddenStatus: HiddenStatus
   dateCreate: DateTime
 }
@@ -2208,15 +2198,6 @@ enum ReadStatus {
 """
 An enumeration.
 """
-enum WatchStatus {
-  VIEWED
-  UNWATCHED
-}
-
-
-"""
-An enumeration.
-"""
 enum HiddenStatus {
   HIDDEN
   SHOWN
@@ -2234,12 +2215,6 @@ type NotificationsUnreadCountType {
   success: Boolean
   failure: FailResponseType
   unreadCount: Int
-}
-
-type NotificationsUnwatchedCountType {
-  success: Boolean
-  failure: FailResponseType
-  unwatchedCount: Int
 }
 
 type ComplaintCategoriesType {
@@ -2859,11 +2834,6 @@ type Mutations {
     Название плейлиста
     """
     title: String!
-    """
-    UID канала
-    TODO: Проверяем, что userUId из токена - автор канала с channelUid
-    """
-    channelUid: UUID!
   ): CreatePlaylistMutation
 
   """
@@ -2887,7 +2857,6 @@ type Mutations {
 
     """
     UID плейлиста
-    TODO: Проверяем, что userUId из токена - автор плейлиста или канала на котором опубликован плейлист
     """
     playlistUid: UUID!
 
@@ -2918,7 +2887,6 @@ type Mutations {
 
     """
     UID плейлиста
-    TODO: Проверяем, что userUId из токена - автор плейлиста или канала на котором опубликован плейлист
     """
     playlistUid: UUID!
   ): UploadPlaylistCoverMutation
@@ -2929,7 +2897,6 @@ type Mutations {
   deleteCoverByPlaylistUid(
     """
     UID плейлиста
-    TODO: Проверяем, что userUId из токена - автор плейлиста или канала на котором опубликован плейлист
     """
     playlistUid: UUID!
   ): DeletePlaylistCoverMutation
@@ -2940,7 +2907,6 @@ type Mutations {
   deletePlaylist(
     """
     UID плейлиста
-    TODO: Проверяем, что userUId из токена - автор плейлиста или канала на котором опубликован плейлист
     """
     playlistUid: UUID!
   ): DeletePlaylistMutation
@@ -2951,7 +2917,6 @@ type Mutations {
   addPlaylistPosts(
     """
     UID плейлиста
-    TODO: Проверяем, что userUId из токена - автор плейлиста или канала на котором опубликован плейлист
     """
     playlistUid: UUID!
 
@@ -2967,7 +2932,6 @@ type Mutations {
   deletePlaylistPosts(
     """
     UID плейлиста
-    TODO: Проверяем, что userUId из токена - автор плейлиста или канала на котором опубликован плейлист
     """
     playlistUid: UUID!
 
@@ -2983,7 +2947,6 @@ type Mutations {
   updatePlaylists(
     """
     Список плейлистов
-    TODO: Проверяем, что userUId из токена - автор каждого плейлиста или каждого канала на котором опубликован плейлист
     """
     playlistUids: [UUID]!
 
@@ -2999,7 +2962,6 @@ type Mutations {
   reorderPlaylistPost(
     """
     UID плейлиста
-    TODO: Проверяем, что userUId из токена - автор плейлиста или канала на котором опубликован плейлист
     """
     playlistUid: UUID!
     posts: [PostOrderType]
@@ -3011,7 +2973,6 @@ type Mutations {
   setPostCoverToPlaylist(
     """
     UID плейлиста
-    TODO: Проверяем, что userUId из токена - автор плейлиста или канала на котором опубликован плейлист
     """
     playlistUid: UUID!
 
@@ -3032,7 +2993,7 @@ type Mutations {
   ): AddOtherUserPlaylist
 
   """
-  Удаление чужого плейлиста из списка своих плейлистов
+  Удаление чужого плейлиста из списка своипх плейлистов
   """
   removeOtherUserPlaylist(
     """
@@ -3062,7 +3023,6 @@ type Mutations {
   updateChannel(
     """
     UID канала
-    TODO: Проверяем, что userUId из токена - автор канала
     """
     channelUid: UUID!
 
@@ -3103,7 +3063,6 @@ type Mutations {
   uploadVideoByPostUid(
     """
     UID поста
-    TODO: Проверяем, что userUId из токена - автор канала, на котором опубликован пост
     """
     postUid: UUID!
 
@@ -3159,7 +3118,6 @@ type Mutations {
 
     """
     UID поста
-    TODO: Проверяем, что userUId из токена - автор канала, на котором опубликован пост
     """
     postUid: UUID!
   ): UploadVideoCoverMutation
@@ -3170,7 +3128,6 @@ type Mutations {
   uploadBannerByChannelUid(
     """
     UID канала
-    TODO: Проверяем, что userUId из токена - автор канала
     """
     channelUid: UUID!
 
@@ -3186,7 +3143,6 @@ type Mutations {
   uploadLogoByChannelUid(
     """
     UID канала
-    TODO: Проверяем, что userUId из токена - автор канала
     """
     channelUid: UUID!
 
@@ -3212,7 +3168,6 @@ type Mutations {
   createPost(
     """
     UID канала
-    TODO: Проверяем, что userUId из токена - автор канала с channelUid
     """
     channelUid: UUID!
 
@@ -3263,7 +3218,6 @@ type Mutations {
 
     """
     UID поста
-    TODO: Проверяем, что userUId из токена - автор канала на котором опубликован пост
     """
     postUid: UUID!
 
@@ -3424,7 +3378,6 @@ type Mutations {
   deleteChannelBanner(
     """
     UID канала
-    TODO: Проверяем, что userUId из токена - автор канала
     """
     channelUid: UUID!
   ): DeleteChannelBanner
@@ -3435,7 +3388,6 @@ type Mutations {
   deleteChannelLogo(
     """
     UID канала
-    TODO: Проверяем, что userUId из токена - автор канала
     """
     channelUid: UUID!
   ): DeleteChannelLogo
@@ -3459,30 +3411,6 @@ type Mutations {
     """
     readStatus: ReadStatus
   ): UpdateNotificationMutation
-
-  """
-  Обновить состояние уведомлений
-  """
-  updateNotifications(
-    """
-    Скрыты ли уведомления
-    """
-    hiddenStatus: HiddenStatus
-    """
-    Прочитаны ли уведомления
-    """
-    readStatus: ReadStatus
-    """
-    Просмотрены ли уведомления
-    """
-    watchStatus: WatchStatus
-    """
-    UIDы уведомлений
-    """
-    notificationsUids: [UUID!]!
-
-
-  ): UpdateNotificationsMutation
 
   """
   Прочитать все уведомления юзеоа
@@ -4463,17 +4391,6 @@ type UpdateNotificationMutation {
   notificationUid: UUID
 }
 
-"""
-Обновить состояние уведомлений
-"""
-type UpdateNotificationsMutation {
-  success: Boolean
-  failure: FailResponseType
-  """
-  UID уведомления
-  """
-  notificationsUids: [UUID!]!
-}
 """
 Прочитать все уведомления юзеоа
 """

@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+
+: Login page;
+if (Forgot password) then (true)
+    : Forgot password page;
+    stop
+else (no)
+    if (Use social networks for auth) is (yes) then
+      if (Login/email already registered) is (yes) then
+        if (By social network) is (yes) then
+          :Return access token;
+        else (no)
+          :By email & password;
+          if (User wants to merge accounts) is (yes) then
+            :Add social network id;
+            :Return access token;
+          else (no)
+            :Return to login page;
+            stop
+          endif
+        endif
+        stop
+      else (no)
+        : Register user;
+        if (condition?) is (yes) then
+          :true;
+        else (no)
+          :false;
+        endif
+      endif
+    else (no)
+      :false;
+    endif
+
+
+stop
+
+@enduml
