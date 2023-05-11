@@ -194,11 +194,6 @@ type Query {
   ): [UserType]
 
   """
-  Проверить наличие email
-  """
-  emailExist(email: String!): EmailExist
-
-  """
   Получить ссылки на социальные профили текущего пользователя
   """
   getUserSocialProfilesLinks: [SocialProfileLinkType]
@@ -270,6 +265,26 @@ type Query {
   getChannelUsers: GetChannelUsersType
 
   """
+  Проверить, зарегистрирован ли Email
+  """
+  checkEmailExists(
+    """
+    Email для поиска
+    """
+    email: String!
+  ): BaseQueryType
+
+  """
+  Проверить, зарегистрирован ли Мобильный телефон
+  """
+  checkMobilePhoneExists(
+    """
+    Мобильный телефон для поиска
+    """
+    mobilePhone: String!
+  ): BaseQueryType
+
+  """
   Получить все комментарии поста по фильтру
   """
   getPostParentComments(
@@ -287,6 +302,11 @@ type Query {
     Состояние комментария
     """
     state: PostCommentStateEnum
+
+    """
+    Отобразить комментарий первым в выдаче
+    """
+    firstCommentUid: UUID
 
     """
     Лимит
@@ -317,6 +337,11 @@ type Query {
     Состояние комментария
     """
     state: PostCommentStateEnum
+
+    """
+    Отобразить комментарий первым в выдаче
+    """
+    firstCommentUid: UUID
 
     """
     Лимит
@@ -997,7 +1022,8 @@ type Query {
   """
   Получить кол-во непрочитанных уведомлений
   """
-  getNotificationsUnreadCount: NotificationsUnreadCountType @deprecated(reason: "Use getNotificationsUnwatchedCount instead.")
+  getNotificationsUnreadCount: NotificationsUnreadCountType
+    @deprecated(reason: "Use getNotificationsUnwatchedCount instead.")
 
   """
   Получить кол-во непросмотренных уведомлений
@@ -1072,6 +1098,7 @@ type PostType {
   favoritedDate: DateTime
   likedDate: DateTime
   watchDate: DateTime
+  videoCommentsCount: Int
 }
 
 """
@@ -1209,6 +1236,7 @@ type UserType {
   dateUpdate: DateTime
   playerSettings: PlayerSettingsType
   unconsumedCredentials: [UnconsumedCredential]
+  defaultAvatarColorStyle: String
 }
 
 """
@@ -1295,8 +1323,12 @@ type VideoType {
 An enumeration.
 """
 enum VideoStateEnum {
-  UPLOAD
+  UPLOADING
+  FAIL_UPLOADING
+  REJECTED
+  QUEUE_TRANSCODING
   TRANSCODING
+  FAIL_TRANSCODING
   COMPLETED
 }
 
@@ -1598,10 +1630,6 @@ type NamesSuggestionEntry {
   name: String
 }
 
-type EmailExist {
-  ok: Boolean
-}
-
 type VerificationTokenExistsType {
   success: Boolean
   failure: FailResponseType
@@ -1713,6 +1741,11 @@ enum RoleStateEnum {
   INVITED
   CANCELLED
   INVITATION_EXPIRED
+}
+
+type BaseQueryType {
+  success: Boolean
+  failure: FailResponseType
 }
 
 type PostCommentsType {
@@ -2142,9 +2175,6 @@ type ActivityNotificationsType {
   offset: Int
   totalCount: Int
   totalUnreadCount: Int
-  """
-  Колличество не просмотренных уведомлений с типом Activity
-  """
   totalUnwatchedActivitiesCount: Int
 }
 
@@ -2160,8 +2190,8 @@ type ActivityNotificationType {
   links: [Dictionary]
   postCoverPath: String
   readStatus: ReadStatus
-  watchStatus: WatchStatus
   hiddenStatus: HiddenStatus
+  watchStatus: WatchStatus
   dateCreate: DateTime
 }
 
@@ -2207,18 +2237,17 @@ enum ReadStatus {
 """
 An enumeration.
 """
-enum WatchStatus {
-  VIEWED
-  UNWATCHED
+enum HiddenStatus {
+  HIDDEN
+  SHOWN
 }
-
 
 """
 An enumeration.
 """
-enum HiddenStatus {
-  HIDDEN
-  SHOWN
+enum WatchStatus {
+  VIEWED
+  UNWATCHED
 }
 
 """
@@ -2337,12 +2366,30 @@ type Mutations {
   login(login: String!, password: String!): LoginMutation
 
   """
-  Аутентифицироваться в системе с помощью социальной сети
+  Аутентифицироваться в системе с помощью социальной сети и кода
   """
   socialNetworkLogin(
     code: String!
     socialNetworkType: SocialNetworkType!
   ): SocialNetworkLoginMutation
+
+  """
+  Аутентифицироваться в системе с помощью социальной сети и access токена
+  """
+  socialNetworkLoginViaAccessToken(
+    accessToken: String!
+    socialNetworkType: SocialNetworkType!
+  ): SocialNetworkLoginMutation
+
+  """
+  Добавить пользователю идентификатор социальной сети
+  """
+  addSocialNetworkIdToExistedUser(
+    socialNetworkType: SocialNetworkType!
+    socialNetworkId: Int!
+    email: String!
+  ): AddSocialNetworkIdToExistedUserMutation
+
   updateUser(
     email: String!
     password: String!
@@ -3437,27 +3484,28 @@ type Mutations {
   ): UpdateNotificationMutation
 
   """
-  Обновить состояние уведомлений
+  Обновить состояние уведомления
   """
   updateNotifications(
     """
-    Скрыты ли уведомления
+    Скрыто ли уведомление
     """
     hiddenStatus: HiddenStatus
+
     """
-    Прочитаны ли уведомления
+    UIDы уведомлений
+    """
+    notificationsUids: [UUID]!
+
+    """
+    Прочитано ли уведомление
     """
     readStatus: ReadStatus
+
     """
     Просмотрены ли уведомления
     """
     watchStatus: WatchStatus
-    """
-    UIDы уведомлений
-    """
-    notificationsUids: [UUID!]!
-
-
   ): UpdateNotificationsMutation
 
   """
@@ -3593,6 +3641,21 @@ type LoginMutation {
 Аутентифицироваться в системе с помощью социальной сети
 """
 type SocialNetworkLoginMutation {
+  success: Boolean
+  failure: FailResponseType
+  user: UserType
+  token: String
+  socialNetworkType: SocialNetworkType
+  userCreated: Boolean
+  socialNetworkId: Int
+  email: String
+  refreshToken: String
+}
+
+"""
+Добавить пользователю идентификатор социальной сети
+"""
+type AddSocialNetworkIdToExistedUserMutation {
   success: Boolean
   failure: FailResponseType
   user: UserType
@@ -4440,16 +4503,18 @@ type UpdateNotificationMutation {
 }
 
 """
-Обновить состояние уведомлений
+Обновить состояние уведомления
 """
 type UpdateNotificationsMutation {
   success: Boolean
   failure: FailResponseType
+
   """
   UID уведомления
   """
-  notificationsUids: [UUID!]!
+  notificationsUids: [UUID]
 }
+
 """
 Прочитать все уведомления юзеоа
 """
