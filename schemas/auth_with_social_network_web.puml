@@ -27,11 +27,6 @@ deactivate SN
 activate GUI
 GUI -> AC: mutation socialNetworkLogin(socialNetworkType, code)
 
-note left AC
-add socialNetworkLoginViaAccessToken(socialNetworkType, access_token)
-пунктов 1..7 не будет для мобилки
-end note
-
 activate AC
 AC -> SN: Request user data by socialNetworkType and code
 activate SN
@@ -55,7 +50,7 @@ activate DB
 DB -> AC: ok
 deactivate DB
 AC -> GUI: success = true, userCreated = true, token, refresh token
-else "user with such email is not exist"
+else  "user with such email is not exist"
 AC -> DB: create social network session with user_uid \ncreate user
 activate DB
 DB -> AC: ok
@@ -64,7 +59,7 @@ AC -> GUI: success = true, userCreated = true, token, refresh token
 deactivate AC
 end
 GUI -> U: Let's Vidaq
-else "user reject merge request"
+else #Pink"user reject merge request"
 U -> GUI: Reject
 GUI -> U: Register page
 end
