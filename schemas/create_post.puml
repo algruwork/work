@@ -50,15 +50,26 @@ note left A
 end note
 A -> GUI: success == true
 deactivate A
-
 end
-
-GUI -> A: query getPost
+GUI -> U: Edit post page
+...
+U -> GUI: Change post description
+GUI -> A: updatePost
 activate A
 note left A
-Получить данные о посте (cover, состояние транскодинга)
+Обновить пост (описание, время публикации, state, access)
 Draft
 end note
 A -> GUI: success == true
 deactivate A
+GUI -> A: query getPost
+activate A
+note left A
+Получить данные о посте (cover, состояние транскодинга)
+Draft or Published
+end note
+A -> GUI: success == true
+deactivate A
+GUI -> U:
+deactivate GUI
 @enduml
