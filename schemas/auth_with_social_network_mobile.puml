@@ -1,6 +1,6 @@
 @startuml
 
-title "Login via Social Network flow"
+title "Login via Social Network flow. Mobile"
 boundary "Identity Provider" as SN
 actor User as U
 boundary "Client APP" as GUI
