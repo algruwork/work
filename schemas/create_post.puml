@@ -1,0 +1,64 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "Create post flow"
+actor User as U
+boundary "Client APP" as GUI
+control "API" as A
+
+autonumber
+
+U -> GUI: Upload video
+activate GUI
+GUI -> A: mutation createPost(channelUid, postType)
+activate A
+note left A
+Создаем пост. Draft
+end note
+A -> GUI: success == true, postUId, urlHash
+deactivate A
+
+GUI -> A: uploadVideoByPostUid
+activate A
+note left A
+Загружаем видео в пост. Draft
+end note
+A -> GUI: success == true
+deactivate A
+
+par
+GUI -[#Red]> A: query getChannels
+activate A
+note left A
+Получаем список каналов. Зачем? Draft
+end note
+A -[#Red]> GUI: success == true
+deactivate A
+
+GUI -> A: query getAgeRestrictions
+activate A
+note left A
+Получить список возрастных ограничений. Draft
+end note
+A -> GUI: success == true
+deactivate A
+
+GUI -> A: query getUserPlaylistsList
+activate A
+note left A
+Получить список плейлистов. Draft
+end note
+A -> GUI: success == true
+deactivate A
+
+end
+
+GUI -> A: query getPost
+activate A
+note left A
+Получить данные о посте (cover, состояние транскодинга)
+Draft
+end note
+A -> GUI: success == true
+deactivate A
+@enduml
