@@ -13,7 +13,8 @@ activate GUI
 GUI -> A: mutation createPost(channelUid, postType)
 activate A
 note left A
-Создаем пост. Draft
+Создаем пост.
+Post.state = DRAFT
 end note
 A -> GUI: success == true, postUId, urlHash
 deactivate A
@@ -21,24 +22,35 @@ deactivate A
 GUI -> A: uploadVideoByPostUid
 activate A
 note left A
-Загружаем видео в пост. Draft
+Загружаем видео в пост.
+Post.state = DRAFT
+Transcoding.state = UPLOADING
+end note
+alt #Pink "Ошибка загрузки"
+A -[#Red]> GUI: success == false
+GUI -[#Red]> U: Fail snack bar. Try again
+note left A
+Transcoding.state = FAIL_UPLOADING
+end note
+else  #Pink "Ошибка формата файла"
+A -[#Red]> GUI: success == false
+GUI -[#Red]> U: Fail snack bar. Try again
+note left A
+Transcoding.state = REJECTED
+end note
+else #LightGreen "Успешная загрузка видео"
+note left A
+Transcoding.state = QUEUE_TRANSCODING or TRANSCODING
 end note
 A -> GUI: success == true
 deactivate A
+GUI -> U: Edit post page
 
-par
-GUI -[#Red]> A: query getChannels
-activate A
-note left A
-Получаем список каналов. Зачем? Draft
-end note
-A -[#Red]> GUI: success == true
-deactivate A
-
+par "Параллельные запросы"
 GUI -> A: query getAgeRestrictions
 activate A
 note left A
-Получить список возрастных ограничений. Draft
+Получить список возрастных ограничений.
 end note
 A -> GUI: success == true
 deactivate A
@@ -46,30 +58,60 @@ deactivate A
 GUI -> A: query getUserPlaylistsList
 activate A
 note left A
-Получить список плейлистов. Draft
+Получить список плейлистов.
 end note
 A -> GUI: success == true
 deactivate A
-end
-GUI -> U: Edit post page
-...
-U -> GUI: Change post description
-GUI -> A: updatePost
-activate A
-note left A
-Обновить пост (описание, время публикации, state, access)
-Draft
-end note
-A -> GUI: success == true
-deactivate A
+end par
+
+
 GUI -> A: query getPost
 activate A
 note left A
 Получить данные о посте (cover, состояние транскодинга)
-Draft or Published
+Post.state = DRAFT
+end note
+
+alt #Pink "Ошибка транскодинга"
+note left A
+Transcoding.state = FAIL_TRANSCODING
+end note
+A -[#Red]> GUI: success == false
+GUI -[#Red]> U: Fail snack bar. Try again
+else #LightGreen "Транскодинг в процессе или завершен"
+note left A
+Transcoding.state = QUEUE_TRANSCODING or TRANSCODING or COMPLETED
 end note
 A -> GUI: success == true
 deactivate A
+...
+
+U -> GUI: Publish (save)
+note left GUI
+Опубликовать пост.
+end note
+alt #Pink "Не все обязательные поля заполнены"
+GUI -> U: Заполните обязательные поля
+else #LightGreen "Все обязательные поля заполнены"
+alt "Транскодинг завершен хотя бы в 1 качество"
+GUI -> A: updatePost(state=PUBLISHED)
+activate A
+note left A
+Пост сразу становится доступным (согласно выбранному access)
+end note
+A -> GUI: success == true
+else "Транскодинг в процессе"
+GUI -> A: updatePost
+note left A
+Пост становится доступным (согласно выбранному access)
+после завершения транскодинга хотя бы в 1 качество
+end note
+A -> GUI: success == true
+deactivate A
+end
 GUI -> U:
 deactivate GUI
+end
+end alt
+end alt
 @enduml
