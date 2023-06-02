@@ -55,6 +55,14 @@ end note
 A -> GUI: success == true
 deactivate A
 
+GUI -> A: query getPostCategories
+activate A
+note left A
+Получить список категорий постов.
+end note
+A -> GUI: success == true
+deactivate A
+
 GUI -> A: query getUserPlaylistsList
 activate A
 note left A

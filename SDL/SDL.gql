@@ -1156,6 +1156,7 @@ An enumeration.
 enum PostAccessTypeEnum {
   PUBLIC
   VIA_LINK
+  ONLY_FOR_ME
 }
 
 type ChannelType {
@@ -1314,6 +1315,7 @@ type VideoType {
   uploadedVideo: UploadedVideoType
   transcodedVideos: [VideoFileModelType]
   progressbarThumbnails: ProgressbarThumbnailsType
+  defaultCovers: [String]
   duration: Float
   dateCreate: DateTime
   dateUpdate: DateTime
@@ -1408,6 +1410,7 @@ type VideoFileModelType {
 An enumeration.
 """
 enum VideoFileStateEnum {
+  FAIL_TRANSCODING
   TRANSCODING
   COMPLETED
 }
@@ -2366,7 +2369,7 @@ type Mutations {
   login(login: String!, password: String!): LoginMutation
 
   """
-  Аутентифицироваться в системе с помощью социальной сети и кода
+  Аутентифицироваться в системе с помощью социальной сети с помощью кода
   """
   socialNetworkLogin(
     code: String!
@@ -2374,22 +2377,21 @@ type Mutations {
   ): SocialNetworkLoginMutation
 
   """
-  Аутентифицироваться в системе с помощью социальной сети и access токена
+  Аутентифицироваться в системе с помощью социальной сети и токена доступа
   """
   socialNetworkLoginViaAccessToken(
     accessToken: String!
     socialNetworkType: SocialNetworkType!
-  ): SocialNetworkLoginMutation
+  ): SocialNetworkLoginViaAccessTokenMutation
 
   """
   Добавить пользователю идентификатор социальной сети
   """
   addSocialNetworkIdToExistedUser(
-    socialNetworkType: SocialNetworkType!
-    socialNetworkId: Int!
     email: String!
+    socialNetworkType: SocialNetworkType!
+    socialNetworkUserId: String!
   ): AddSocialNetworkIdToExistedUserMutation
-
   updateUser(
     email: String!
     password: String!
@@ -3013,6 +3015,16 @@ type Mutations {
   ): DeletePlaylistPostsMutation
 
   """
+  Удалить посты автора
+  """
+  deletePosts(
+    """
+    UIDы постов
+    """
+    postUids: [UUID]!
+  ): DeletePostsMutation
+
+  """
   Обновляет список плейлистов для указанного поста
   """
   updatePlaylists(
@@ -3348,6 +3360,16 @@ type Mutations {
     postUid: UUID!
   ): LogPostWatch
 
+    """
+    Пометить пост просмотренным
+    """
+    markPostAsWatched(
+        """
+        UID поста
+        """
+        postUid: UUID!
+    ): MarkPostAsWatched
+
   """
   Удалить всю историю просмотров пользователя или по ID
   """
@@ -3638,16 +3660,31 @@ type LoginMutation {
 }
 
 """
-Аутентифицироваться в системе с помощью социальной сети
+Аутентифицироваться в системе с помощью социальной сети с помощью кода
 """
 type SocialNetworkLoginMutation {
   success: Boolean
   failure: FailResponseType
   user: UserType
-  token: String
   socialNetworkType: SocialNetworkType
   userCreated: Boolean
-  socialNetworkId: Int
+  socialNetworkUserId: String
+  token: String
+  email: String
+  refreshToken: String
+}
+
+"""
+Аутентифицироваться в системе с помощью социальной сети и токена доступа
+"""
+type SocialNetworkLoginViaAccessTokenMutation {
+  success: Boolean
+  failure: FailResponseType
+  user: UserType
+  socialNetworkType: SocialNetworkType
+  userCreated: Boolean
+  socialNetworkUserId: String
+  token: String
   email: String
   refreshToken: String
 }
@@ -3659,6 +3696,7 @@ type AddSocialNetworkIdToExistedUserMutation {
   success: Boolean
   failure: FailResponseType
   user: UserType
+  userCreated: Boolean
   token: String
   refreshToken: String
 }
@@ -4118,6 +4156,15 @@ type DeletePlaylistPostsMutation {
 }
 
 """
+Удалить посты автора
+"""
+type DeletePostsMutation {
+  success: Boolean
+  failure: FailResponseType
+}
+
+
+"""
 Обновляет список плейлистов для указанного поста
 """
 type UpdatePlaylists {
@@ -4370,6 +4417,14 @@ type DeleteLikedPosts {
 type LogPostWatch {
   success: Boolean
   failure: FailResponseType
+}
+
+"""
+Пометить пост просмотренным
+"""
+type MarkPostAsWatched {
+    success: Boolean
+    failure: FailResponseType
 }
 
 """

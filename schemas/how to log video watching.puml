@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+title "Log watch. Easy"
+actor User as U
+boundary "Client APP" as GUI
+control "vidaq" as V
+
+autonumber
+
+U -> GUI: Click on video
+activate GUI
+GUI -> V: getPost
+activate V
+V -> GUI:
+deactivate V
+GUI -> U:
+
+alt "post duration < 15 sec"
+... waiting until watching is over ...
+GUI -> V: mutation markPostAsWatched
+activate V
+V -> GUI:
+deactivate V
+else "post duration > 15 sec"
+... waiting 15 sec watching ...
+GUI -> V: mutation markPostAsWatched
+activate V
+V -> GUI:
+deactivate V
+end
+@enduml
