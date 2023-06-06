@@ -217,11 +217,6 @@ type Query {
   ): VerificationTokenExistsType
 
   """
-  Получить все пользовательские настройки
-  """
-  getUserSettings: [UserSettingsModelType]
-
-  """
   Получить пользовательские настройки текущего пользователя
   """
   getUserSettingsByCurrentUser: [UserSettingsType]
@@ -1023,7 +1018,7 @@ type Query {
   Получить кол-во непрочитанных уведомлений
   """
   getNotificationsUnreadCount: NotificationsUnreadCountType
-    @deprecated(reason: "Use getNotificationsUnwatchedCount instead.")
+  @deprecated(reason: "Use getNotificationsUnwatchedCount instead.")
 
   """
   Получить кол-во непросмотренных уведомлений
@@ -1070,6 +1065,8 @@ type ErrorType {
 union SearchResultType = PostType | ExtendedChannelType | PlaylistType
 
 type PostType {
+  success: Boolean
+  failure: FailResponseType
   uid: UUID
   postType: PostTypeEnum
   state: PostStateEnum
@@ -1099,6 +1096,9 @@ type PostType {
   likedDate: DateTime
   watchDate: DateTime
   videoCommentsCount: Int
+  viewsCount: Int
+  commentsCount: Int
+  reactionsCount: Int
 }
 
 """
@@ -1269,6 +1269,8 @@ value as specified by
 scalar Date
 
 type SocialProfileLinkType {
+  success: Boolean
+  failure: FailResponseType
   id: Int
   userUid: UUID
   link: String
@@ -1277,6 +1279,8 @@ type SocialProfileLinkType {
 }
 
 type UserSettingsType {
+  success: Boolean
+  failure: FailResponseType
   userSettingsTypeId: Int
   userSettingsValue: Boolean
 }
@@ -1471,6 +1475,8 @@ type ExtendedChannelType {
 }
 
 type PlaylistType {
+  success: Boolean
+  failure: FailResponseType
   uid: UUID
   userUid: UUID
   channelUid: UUID
@@ -1651,12 +1657,6 @@ enum VerificationTypeEnum {
   RESET_PASSWORD_MOBILE
 }
 
-type UserSettingsModelType {
-  id: Int
-  settingsName: String
-  isActive: Boolean
-}
-
 type Settings {
   success: Boolean
   failure: FailResponseType
@@ -1752,6 +1752,8 @@ type BaseQueryType {
 }
 
 type PostCommentsType {
+  success: Boolean
+  failure: FailResponseType
   comments: [PostCommentType]
   limit: Int
   offset: Int
@@ -1910,6 +1912,8 @@ type SystemChannelType {
 }
 
 type SystemPlaylistType {
+  success: Boolean
+  failure: FailResponseType
   uid: UUID
   systemChannelUid: UUID
   title: String
@@ -1989,6 +1993,8 @@ type SubscriptionObjectType {
 }
 
 type ChannelSubscriptionInfoType {
+  success: Boolean
+  failure: FailResponseType
   channelUid: UUID
   userSubscriptionStatus: String
   subscriptionsCount: Int
@@ -2094,6 +2100,8 @@ type PlaylistCategoryType {
 }
 
 type SystemPlaylistsType {
+  success: Boolean
+  failure: FailResponseType
   systemPlaylists: [SystemPlaylistType]
   limit: Int
   offset: Int
@@ -2762,36 +2770,60 @@ type Mutations {
     """
     videoTimestamp: Int
   ): AddVideoCommentMutation
+
+  """
+  Подписаться на канал
+  """
   subscribeChannel(
     """
     UID канала
     """
     channelUid: UUID!
   ): SubscribeChannelMutation
+
+  """
+  Отписаться от канала
+  """
   unsubscribeChannel(
     """
     UID канала
     """
     channelUid: UUID!
   ): UnsubscribeChannelMutation
+
+  """
+  Включить/отключить уведомления от подписанного канала
+  """
   toggleChannelNotifications(
     """
     UID канала
     """
     channelUid: UUID!
   ): ToggleChannelNotifications
+
+  """
+  Подписаться на пользователя
+  """
   subscribeUser(
     """
     UID пользователя
     """
     userUid: UUID!
   ): SubscribeUserMutation
+
+  """
+  Отписаться от пользователя
+  """
   unsubscribeUser(
     """
     UID пользователя
     """
     userUid: UUID!
   ): UnsubscribeUserMutation
+
+  """
+  Включить/отключить уведомелния от подписанного пользователя
+  """
   toggleUserNotifications(
     """
     UID пользователя
@@ -3013,16 +3045,6 @@ type Mutations {
     """
     postUids: [UUID]!
   ): DeletePlaylistPostsMutation
-
-  """
-  Удалить посты автора
-  """
-  deletePosts(
-    """
-    UIDы постов
-    """
-    postUids: [UUID]!
-  ): DeletePostsMutation
 
   """
   Обновляет список плейлистов для указанного поста
@@ -3280,6 +3302,11 @@ type Mutations {
     categoryId: Int
 
     """
+    Путь до коврика поста
+    """
+    cover: String
+
+    """
     Описание поста
     """
     description: String
@@ -3346,6 +3373,16 @@ type Mutations {
   deleteLikedPosts: DeleteLikedPosts
 
   """
+  Delete multiple posts by their respective uuids.
+  """
+  deletePosts(
+    """
+    UIDы постов
+    """
+    postUids: [UUID]!
+  ): DeletePosts
+
+  """
   Управление историей просмотров
   """
   logPostWatch(
@@ -3359,16 +3396,6 @@ type Mutations {
     """
     postUid: UUID!
   ): LogPostWatch
-
-    """
-    Пометить пост просмотренным
-    """
-    markPostAsWatched(
-        """
-        UID поста
-        """
-        postUid: UUID!
-    ): MarkPostAsWatched
 
   """
   Удалить всю историю просмотров пользователя или по ID
@@ -3484,6 +3511,16 @@ type Mutations {
     """
     channelUid: UUID!
   ): DeleteChannelLogo
+
+  """
+  Засчитать просмотр
+  """
+  markPostAsWatched(
+    """
+    UID поста
+    """
+    postUid: UUID!
+  ): MarkPostAsWatched
 
   """
   Обновить состояние уведомления
@@ -3997,31 +4034,49 @@ that will be handled by the multipart request spec
 """
 scalar Upload
 
+"""
+Подписаться на канал
+"""
 type SubscribeChannelMutation {
   success: Boolean
   failure: FailResponseType
 }
 
+"""
+Отписаться от канала
+"""
 type UnsubscribeChannelMutation {
   success: Boolean
   failure: FailResponseType
 }
 
+"""
+Включить/отключить уведомления от подписанного канала
+"""
 type ToggleChannelNotifications {
   success: Boolean
   failure: FailResponseType
 }
 
+"""
+Подписаться на пользователя
+"""
 type SubscribeUserMutation {
   success: Boolean
   failure: FailResponseType
 }
 
+"""
+Отписаться от пользователя
+"""
 type UnsubscribeUserMutation {
   success: Boolean
   failure: FailResponseType
 }
 
+"""
+Включить/отключить уведомелния от подписанного пользователя
+"""
 type ToggleUserNotifications {
   success: Boolean
   failure: FailResponseType
@@ -4154,15 +4209,6 @@ type DeletePlaylistPostsMutation {
   """
   playlistUid: UUID
 }
-
-"""
-Удалить посты автора
-"""
-type DeletePostsMutation {
-  success: Boolean
-  failure: FailResponseType
-}
-
 
 """
 Обновляет список плейлистов для указанного поста
@@ -4412,19 +4458,24 @@ type DeleteLikedPosts {
 }
 
 """
+Delete multiple posts by their respective uuids.
+"""
+type DeletePosts {
+  success: Boolean
+  failure: FailResponseType
+
+  """
+  UIDы удаленных постов
+  """
+  deletedPostUids: [UUID]
+}
+
+"""
 Управление историей просмотров
 """
 type LogPostWatch {
   success: Boolean
   failure: FailResponseType
-}
-
-"""
-Пометить пост просмотренным
-"""
-type MarkPostAsWatched {
-    success: Boolean
-    failure: FailResponseType
 }
 
 """
@@ -4540,6 +4591,14 @@ type DeleteChannelBanner {
 Удалить лого канала
 """
 type DeleteChannelLogo {
+  success: Boolean
+  failure: FailResponseType
+}
+
+"""
+Засчитать просмотр
+"""
+type MarkPostAsWatched {
   success: Boolean
   failure: FailResponseType
 }
