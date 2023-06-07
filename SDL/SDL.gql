@@ -1066,7 +1066,7 @@ union SearchResultType = PostType | ExtendedChannelType | PlaylistType
 
 type OptimizedImageType {
   url: String!
-  size: CoversSizeEnum!
+  size: OptimizedImageSizeEnum!
 }
 
 type PostType {
@@ -1852,7 +1852,7 @@ enum VideoCommentStateEnum {
 """
 An enumeration.
 """
-enum CoversSizeEnum {
+enum OptimizedImageSizeEnum {
   MEDIUM
   SMALL
   LARGE
