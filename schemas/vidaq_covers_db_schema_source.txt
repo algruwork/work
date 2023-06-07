@@ -1,0 +1,39 @@
+
+Table vidaq.cover_sizes as CS {
+  id int [pk, increment]
+  size varchar(20) [not null, note: "SMALL, MEDIUM, LARGE"]
+}
+
+Table vidaq.post_covers {
+  post_uid UUID [not null]
+  cover_size_id int [ref: > CS.id]
+  Indexes {
+    (post_uid, cover_size_id) [unique, name:'post_covers']
+  }
+}
+
+Table accsess_service.user_avatars {
+  user_uid UUID [not null]
+  cover_size_id int [ref: > CS.id]
+  Indexes {
+    (user_uid, cover_size_id) [unique, name:'user_avatars']
+  }
+}
+
+
+Table playlists_service.playlist_covers {
+  playlist_uid UUID [not null]
+  cover_size_id int [ref: > CS.id]
+  Indexes {
+    (playlist_uid, cover_size_id) [unique, name:'playlist_covers']
+  }
+}
+
+
+Table vidaq.channel_banners {
+  channel_uid UUID [not null]
+  cover_size_id int [ref: > CS.id]
+  Indexes {
+    (channel_uid, cover_size_id) [unique, name:'channel_banners']
+  }
+}
