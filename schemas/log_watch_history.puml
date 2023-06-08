@@ -1,0 +1,18 @@
+@startuml
+(*) --> "Главная страница"
+    --> "Получить настройки "
+    note left
+     getSettings(settingsType: GENERAL)
+    end note
+    --> "Посмотреть пост"
+if "Нужно сохранять \nпросмотры в историю\n" then
+note left
+значение data.getSettings.settings[*].value != false
+для data.getSettings.settings[*].name == SAVE_HISTORY
+end note
+  -->[true] "Сохранить факт просмотра"
+  -right-> (*)
+else
+  -->[false] (*)
+endif
+@enduml
