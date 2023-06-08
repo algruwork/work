@@ -7,16 +7,18 @@ Table vidaq.cover_sizes as CS {
 Table vidaq.post_covers {
   post_uid UUID [not null]
   cover_size_id int [ref: > CS.id]
+  path varchar(500)
   Indexes {
     (post_uid, cover_size_id) [unique, name:'post_covers']
   }
 }
 
 Table accsess_service.user_avatars {
-  user_uid UUID [not null]
+  avatar_uid UUID [not null]
   cover_size_id int [ref: > CS.id]
+  path varchar(500)
   Indexes {
-    (user_uid, cover_size_id) [unique, name:'user_avatars']
+    (avatar_uid, cover_size_id) [unique, name:'avatar_covers']
   }
 }
 
@@ -24,6 +26,7 @@ Table accsess_service.user_avatars {
 Table playlists_service.playlist_covers {
   playlist_uid UUID [not null]
   cover_size_id int [ref: > CS.id]
+  path varchar(500)
   Indexes {
     (playlist_uid, cover_size_id) [unique, name:'playlist_covers']
   }
@@ -31,9 +34,10 @@ Table playlists_service.playlist_covers {
 
 
 Table vidaq.channel_banners {
-  channel_uid UUID [not null]
+  channel_banner_uid UUID [not null]
   cover_size_id int [ref: > CS.id]
+  path varchar(500)
   Indexes {
-    (channel_uid, cover_size_id) [unique, name:'channel_banners']
+    (channel_banner_uid, cover_size_id) [unique, name:'channel_banner_covers']
   }
 }
