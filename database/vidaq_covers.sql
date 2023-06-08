@@ -11,22 +11,26 @@ CREATE TABLE "vidaq"."cover_sizes" (
 
 CREATE TABLE "vidaq"."post_covers" (
   "post_uid" UUID NOT NULL,
-  "cover_size_id" int
+  "cover_size_id" int,
+  "path" varchar(500)
 );
 
 CREATE TABLE "vidaq"."channel_banners" (
   "channel_uid" UUID NOT NULL,
-  "cover_size_id" int
+  "cover_size_id" int,
+  "path" varchar(500)
 );
 
 CREATE TABLE "accsess_service"."user_avatars" (
   "user_uid" UUID NOT NULL,
-  "cover_size_id" int
+  "cover_size_id" int,
+  "path" varchar(500)
 );
 
 CREATE TABLE "playlists_service"."playlist_covers" (
   "playlist_uid" UUID NOT NULL,
-  "cover_size_id" int
+  "cover_size_id" int,
+  "path" varchar(500)
 );
 
 CREATE UNIQUE INDEX "post_covers" ON "vidaq"."post_covers" ("post_uid", "cover_size_id");
