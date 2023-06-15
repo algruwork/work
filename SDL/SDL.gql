@@ -1064,11 +1064,6 @@ type ErrorType {
 
 union SearchResultType = PostType | ExtendedChannelType | PlaylistType
 
-type OptimizedImageType {
-  url: String!
-  size: OptimizedImageSizeEnum!
-}
-
 type PostType {
   success: Boolean
   failure: FailResponseType
@@ -1079,8 +1074,7 @@ type PostType {
   description: String
   category: PostCategoryType
   language: String
-  cover: String @deprecated
-  covers: [OptimizedImageType!]
+  cover: String
   location: String
   ageRestriction: PostAgeRestrictionType
   schedulePost: DateTime
@@ -1174,10 +1168,8 @@ type ChannelType {
   title: String
   description: String
   contactEmail: String
-  banner: String @deprecated
-  banners: [OptimizedImageType!]
-  logo: String @deprecated
-  logos: [OptimizedImageType!]
+  banner: String
+  logo: String
   topics: [String]
   socialLinks: [OutputSocialProfileLink]
   user: UserType
@@ -1228,8 +1220,7 @@ type UserType {
   email: String
   name: String
   state: UserStateEnum
-  avatar: String @deprecated
-  avatars: [OptimizedImageType!]
+  avatar: String
   username: String
   birthday: Date
   mobilePhone: String
@@ -1465,10 +1456,8 @@ type ExtendedChannelType {
   title: String
   description: String
   contactEmail: String
-  banner: String @deprecated
-  banners: [OptimizedImageType!]
-  logo: String @deprecated
-  logos: [OptimizedImageType!]
+  banner: String
+  logo: String
   topics: [String]
   socialLinks: [OutputSocialProfileLink]
   user: UserType
@@ -1497,8 +1486,7 @@ type PlaylistType {
   access: PlaylistAccessTypeEnum
   tags: [String]
   categoryId: Int
-  cover: String @deprecated
-  covers: [OptimizedImageType!]
+  cover: String
   postCount: Int
   viewsCount: Int
   lastPostUid: UUID
@@ -1831,8 +1819,7 @@ type PostCommentVideoType {
   state: VideoCommentStateEnum
   fileName: String
   gifPreview: String
-  cover: String @deprecated
-  covers: [OptimizedImageType!]
+  cover: String
   dateCreate: DateTime
   dateUpdate: DateTime
   dateDelete: DateTime
@@ -1847,15 +1834,6 @@ enum VideoCommentStateEnum {
   TRANSCODING
   COMPLETED
   DELETED
-}
-
-"""
-An enumeration.
-"""
-enum OptimizedImageSizeEnum {
-  MEDIUM
-  SMALL
-  LARGE
 }
 
 """
@@ -1925,8 +1903,7 @@ type SystemChannelType {
   systemChannelCategoryId: Int
   title: String
   description: String
-  logo: String @deprecated
-  logos: [OptimizedImageType!]
+  logo: String
   promoPlaylist: SystemPlaylistType
   systemPlaylists: [SystemPlaylistType]
   dateCreate: DateTime
@@ -1943,8 +1920,7 @@ type SystemPlaylistType {
   description: String
   state: PlaylistStateEnum
   tags: [String]
-  cover: String @deprecated
-  covers: [OptimizedImageType!]
+  cover: String
   postCount: Int
   viewsCount: Int
   lastPostUid: UUID
@@ -2013,8 +1989,7 @@ type SubscriptionObjectType {
   """
   Логотип
   """
-  logo: String @deprecated
-  logos: [OptimizedImageType!]
+  logo: String
 }
 
 type ChannelSubscriptionInfoType {
@@ -2093,6 +2068,8 @@ enum PlaylistPostsSortingTypeEnum {
   DATE_DESC
   ORDER_ASC
   ORDER_DESC
+  VIEWS_ASC
+  VIEWS_DESC
 }
 
 """
@@ -2148,8 +2125,7 @@ type PlaylistCardType {
   channelUid: UUID
   title: String
   postCount: Int
-  cover: String @deprecated
-  covers: [OptimizedImageType!]
+  cover: String
   dateUpdate: String
 }
 
@@ -2247,8 +2223,7 @@ type EventInitiator {
   uid: UUID
   kind: EventInitiatorKind
   name: String
-  avatar: String @deprecated
-  avatars: [OptimizedImageType!]
+  avatar: String
 }
 
 """
@@ -4187,7 +4162,7 @@ type UploadPlaylistCoverMutation {
   """
   Путь до загруженной картинки
   """
-  covers: [OptimizedImageType!]
+  coverPath: String
 }
 
 """
@@ -4379,7 +4354,7 @@ type UploadVideoCoverMutation {
   """
   Путь до загруженной картинки
   """
-  covers: [OptimizedImageType!]
+  coverPath: String
 }
 
 """
@@ -4392,7 +4367,7 @@ type UploadChannelBannerMutation {
   """
   Путь до загруженной картинки
   """
-  covers: [OptimizedImageType!]
+  coverPath: String
 }
 
 """
@@ -4405,7 +4380,7 @@ type UploadChannelLogoMutation {
   """
   Путь до загруженной картинки
   """
-  covers: [OptimizedImageType!]
+  coverPath: String
 }
 
 """
