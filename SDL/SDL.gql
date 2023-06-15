@@ -784,11 +784,6 @@ type Query {
     access: PlaylistAccessTypeEnum
 
     """
-    Состояние плейлиста
-    """
-    state: PlaylistStateEnum
-
-    """
     Состояния плейлиста
     """
     states: [PlaylistStateEnum]
@@ -796,7 +791,7 @@ type Query {
     """
     UID пользователя
     """
-    userUid: UUID
+    userUid: UUID @deprecated
 
     """
     UID канала
@@ -826,7 +821,7 @@ type Query {
     """
     Тип плейлиста
     """
-    playlistType: PlaylistTypeEnum
+    playlistType: PlaylistTypeEnum @deprecated
 
     """
     Лимит
@@ -841,7 +836,11 @@ type Query {
     """
     Включать ли в результат плейлисты, которые userUid или channelUid добавили к себе
     """
-    withAddedOtherUsersPlaylists: Boolean
+    withAddedOtherUsersPlaylists: Boolean @deprecated
+    """
+    Фильтра по автору (созданный или добавленный)
+    """
+    filterByCreator: PlaylistAuthFilterTypeEnum
   ): PlaylistsType
 
   """
@@ -1528,6 +1527,7 @@ An enumeration.
 enum PlaylistAccessTypeEnum {
   PUBLIC
   VIA_LINK
+  HIDDEN_BY_CREATOR
 }
 
 type PostsType {
@@ -1617,6 +1617,7 @@ type PlaylistsType {
   limit: Int
   offset: Int
   totalCount: Int
+  totalHiddenCount: Int
 }
 
 type SearchHistoryType {
@@ -2105,6 +2106,8 @@ enum PlaylistSortingTypeEnum {
   DATE_UPDATE_DESC
   VIEWS_COUNT_ASC
   VIEWS_COUNT_DESC
+  ALPHABETICAL_ASC
+  ALPHABETICAL_DESC
 }
 
 """
@@ -2113,6 +2116,14 @@ An enumeration.
 enum PlaylistTypeEnum {
   USER
   CHANNEL
+}
+
+"""
+Значения для фильтра по автору (созданный или добавленный)
+"""
+enum PlaylistAuthFilterTypeEnum {
+  CREATED
+  ADDED
 }
 
 type PlaylistCategoryType {
