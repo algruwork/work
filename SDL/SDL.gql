@@ -3005,6 +3005,10 @@ type Mutations {
     Тип доступа к плейлисту
     """
     access: PlaylistAccessTypeEnum
+    """
+    UID плейлиста
+    """
+    playlistUid: UUID!
   ): UpdateAddedPlaylistMutation
 
   """
