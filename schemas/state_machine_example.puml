@@ -1,16 +1,33 @@
 @startuml
-state A {
-  state X {
-  }
-  state Y {
-  }
+
+state "Original. Public" as OP {
+  state "Public" as OPP {
+      OPP --> VR
+      OPP --> OR
+    }
+  state "Via link" as VR {
+      VR --> PR
+      VR --> OR
+    }
+  state "Only me" as OR {
+      OR --> PR
+      OR --> VR
+    }
 }
 
-state B {
-  state Z {
-  }
+state "Original. Via link" as OV {
+  state "Public" as PR {
+      PR --> VR
+      PR --> OR
+    }
+  state "Via link" as VR {
+      VR --> PR
+      VR --> OR
+    }
+  state "Only me" as OR {
+      OR --> PR
+      OR --> VR
+    }
 }
 
-X --> Z
-Z --> Y
 @enduml

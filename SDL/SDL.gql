@@ -791,7 +791,8 @@ type Query {
     """
     UID пользователя
     """
-    userUid: UUID @deprecated
+    userUid: UUID
+    @deprecated(reason: "Because of merging channel and user entities. Playlist now related only to channels")
 
     """
     UID канала
@@ -821,7 +822,8 @@ type Query {
     """
     Тип плейлиста
     """
-    playlistType: PlaylistTypeEnum @deprecated
+    playlistType: PlaylistTypeEnum
+    @deprecated(reason: "Because of merging channel and user entities. Playlist now related only to channels")
 
     """
     Лимит
@@ -836,7 +838,7 @@ type Query {
     """
     Включать ли в результат плейлисты, которые userUid или channelUid добавили к себе
     """
-    withAddedOtherUsersPlaylists: Boolean @deprecated
+    withAddedOtherUsersPlaylists: Boolean @deprecated(reason: "Use filterByCreator instead.")
     """
     Фильтра по автору (созданный или добавленный)
     """
@@ -1516,6 +1518,7 @@ enum PlaylistAccessTypeEnum {
   PUBLIC
   VIA_LINK
   HIDDEN_BY_CREATOR
+  ONLY_ME
 }
 
 type PostsType {
@@ -2995,6 +2998,16 @@ type Mutations {
   ): UpdatePlaylistMutation
 
   """
+  Обновить добавленный плейлист
+  """
+  updateAddedPlaylist(
+    """
+    Тип доступа к плейлисту
+    """
+    access: PlaylistAccessTypeEnum
+  ): UpdateAddedPlaylistMutation
+
+  """
   Загрузить обложку плейлиста
   """
   uploadCoverByPlaylistUid(
@@ -4154,6 +4167,19 @@ type CreatePlaylistMutation {
 Обновить плейлист
 """
 type UpdatePlaylistMutation {
+  success: Boolean
+  failure: FailResponseType
+
+  """
+  UID плейлиста
+  """
+  playlistUid: UUID
+}
+
+"""
+Обновить добавленный плейлист
+"""
+type UpdateAddedPlaylistMutation {
   success: Boolean
   failure: FailResponseType
 
