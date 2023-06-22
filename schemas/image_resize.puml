@@ -1,0 +1,62 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title "Upload image flow"
+
+actor User as U
+boundary "Client APP" as GUI
+control "api-service" as AS
+control "uploader-service" as US
+control "resize-crop-image-service" as IS
+
+
+autonumber
+
+U -> GUI: Загрузить аватар
+activate GUI
+GUI -> AS: uploadAvatar
+activate AS
+note left AS
+%autonumber%. Аналогично
+uploadCoverByPostUid
+uploadBannerByChannelUid
+uploadCoverByPlaylistUid
+
+?? uploadLogoByChannelUid ??
+end note
+
+AS -> US: POST /images/avatar
+activate US
+note left US
+%autonumber%. Аналогично
+POST /video-cover/{post_uid}
+POST /channel-banner/{channel_uid}
+POST /playlist-cover/{playlist_uid}
+
+?? POST /channel-logo/{channel_uid} ??
+end note
+
+US -> IS: POST /images
+activate IS
+note left IS
+%autonumber%. в payload передаем параметры
+обработки изображения
+end note
+IS -> IS: normalize, name and \nstore image
+IS -> US: image name-path
+deactivate IS
+
+US -> US: update image name-path
+note right US #Pink
+%autonumber%. Сейчас сервис ходит в
+"не свои" схемы БД напрямую
+end note
+
+US -> AS:
+deactivate US
+AS -> GUI: success = true
+deactivate AS
+
+GUI -> U:
+deactivate GUI
+
+@enduml
