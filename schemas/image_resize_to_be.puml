@@ -1,0 +1,65 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title "Upload image flow. To be"
+
+actor User as U
+boundary "Client APP" as GUI
+control "api-service" as AS
+control "uploader-service" as US
+control "resize-crop-image-service" as IS
+
+
+autonumber
+
+U -> GUI: Загрузить аватар
+activate GUI
+GUI -> AS: uploadLogoByChannelUid
+activate AS
+note left AS
+%autonumber%. Аналогично для
+uploadCoverByPostUid
+uploadBannerByChannelUid
+uploadCoverByPlaylistUid
+uploadAvatar
+end note
+
+'Аватар пользователя и логотип канала - это одно и то же изображение
+'лучше использовать канальную сущность
+
+AS -> US: GET /images/normalize-rules
+activate US
+
+note left US
+%autonumber%. Получаем правила
+нормализации изображений
+для каждого типа изображения
+end note
+
+US -> AS:
+deactivate US
+
+alt  #Pink "Изображение не подходит по требованиям"
+AS --> GUI: success == false
+else #LightGreen "Изображение подходит по требованиям"
+
+AS -> IS: POST /images
+activate IS
+note left IS
+%autonumber%. В payload передаем параметры
+обработки изображения
+end note
+IS -> IS: normalize, name and \nstore image
+IS -> AS: image name-path
+deactivate IS
+
+AS -> AS: update image name-path
+
+
+AS -> GUI: success = true
+deactivate AS
+end alt
+
+GUI -> U:
+deactivate GUI
+
+@enduml
