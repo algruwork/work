@@ -54,7 +54,6 @@ deactivate IS
 
 AS -> AS: update image name-path
 
-
 AS -> GUI: success = true
 deactivate AS
 end alt

@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title "Getting image flow. To be"
+
+actor User as U
+boundary "Client APP" as GUI
+control "api-service" as AS
+control "vidaq-service" as V
+collections "nginx" as WS
+control "resize-crop-image-service" as IS
+
+
+autonumber
+
+U -> GUI: Переход на главную страницу
+activate GUI
+
+GUI -> AS: getPosts
+activate AS
+note left AS
+Получаем список постов,
+где PostType.cover - путь до
+нормализованного файла.
+{host} часть пути подставляет API
+end note
+AS -> V: GET posts/
+activate V
+V -> AS: http 200
+deactivate V
+AS -> GUI: success == true
+deactivate AS
+
+GUI -> WS: GET {host}/{image_name}
+activate WS
+alt #LightBlue "Изобр-е с указанными \nпараметрами отсутствует кэше"
+WS -> IS: GET /images/{image_name}?h=250,w=250
+activate IS
+IS -> IS: Получаем \nнормализованное \nизображение
+IS -> IS: Применяем \nпреобразования
+IS -> WS: Возвращаем \nбработанное \nизображение
+deactivate IS
+end alt
+WS -> WS: Сохранияем в кэш
+WS -> GUI: image
+deactivate WS
+
+
+GUI -> U:
+deactivate GUI
+
+@enduml
