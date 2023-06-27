@@ -33,14 +33,15 @@ deactivate AS
 GUI -> WS: GET {host}/{image_name}
 activate WS
 alt #LightBlue "Изобр-е с указанными \nпараметрами отсутствует кэше"
-WS -> IS: GET /images/{image_name}?h=250,w=250
+WS -> IS: GET /images/{image_name}
 activate IS
 IS -> IS: Получаем \nнормализованное \nизображение
 IS -> IS: Применяем \nпреобразования
-IS -> WS: Возвращаем \nбработанное \nизображение
+IS -> WS: Возвращаем \nобработанное \nизображение
 deactivate IS
-end alt
 WS -> WS: Сохранияем в кэш
+end alt
+
 WS -> GUI: image
 deactivate WS
 

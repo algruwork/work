@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: Image API
+  description: API for getting and uploading images
+  version: 1.0.0
+
+paths:
+  /images/{image_name}:
+    parameters:
+      - name: image_name
+        in: path
+        description: Name of the image
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get an image by name
+      description: Retrieves an image by its name
+      parameters:
+        - name: width
+          in: query
+          description: Image width in pixels
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - name: height
+          in: query
+          description: Image height in pixels
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - name: crop
+          in: query
+          description: Apply crop to image
+          schema:
+            type: string
+            enum:
+              - CENTER
+      responses:
+        '200':
+          description: OK
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                error:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid request parameters
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                error:
+                  value:
+                    code: NOT_FOUND
+                    message: Image not found
+  /images:
+    post:
+      summary: Upload an image
+      description: Uploads a new image file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                width:
+                  type: integer
+                  minimum: 1
+                  description: Image width in pixels (required)
+                height:
+                  type: integer
+                  minimum: 1
+                  description: Image height in pixels (required)
+                quality:
+                  type: integer
+                  minimum: 1
+                  default: 83
+                  description: Image quality
+                format:
+                  type: string
+                  default: jpeg
+                  description: End format
+                max-size:
+                  type: integer
+                  minimum: 1
+                  default: 5120
+                  description: Maximum file size in kilobytes
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: 398279331faba716582ec8e43036bca5bd3b2a85e9b4581d95100612dfb03817.jpeg
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                error:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid request parameters
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string

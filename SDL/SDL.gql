@@ -946,6 +946,11 @@ type Query {
     Тип сортировки
     """
     sort: PlaylistSortingTypeEnum
+
+    """
+    Идентификатор видео. Для проверки входимости видео в плейлисты.
+    """
+    urlHash: String
   ): PlaylistCardsType
 
   """
