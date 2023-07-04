@@ -1,0 +1,55 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title "There comes title"
+
+actor User as U
+boundary "Client APP" as GUI
+control "vidaq-api-service" as API
+
+autonumber
+
+U -> GUI: Записывет видеокомментарий
+activate GUI
+GUI -> API: mutation addPostVideoComment
+activate API
+note left API
+Загружается исходный файл
+end note
+alt #Pink "Ошибка загрузки или валидации"
+API -> GUI: success == false
+GUI -> U: Ошибка
+else #LightGreen "Файл загружен"
+API -> GUI: success == true, commentUid
+deactivate API
+GUI -> U: Обработка видеокомментария началлась
+note left GUI
+%autonumber%. Отображаем тостер.
+Закрываем страницу записи видеокомментария.
+Отображаем скиллетон видеокомментария.
+end note
+
+GUI -> API: query getPostParentComments
+activate API
+API -> GUI: success == true, [PostCommentType]
+deactivate API
+
+alt #LightBlue "Созданный комментарий state != Published"
+loop "каждые 10 сек, но не больше 30 раз"
+GUI -> API: query getPostParentCommentsByUids
+activate API
+API --> GUI: success == true, PostCommentType
+deactivate API
+end loop
+
+else #LightYellow "Созданный комментарий state == Published"
+
+GUI -> U: Видеокомментарий обработан и опубликован
+note left GUI
+%autonumber%. Отображаем тостер.
+Отображаем видеокомментарий вместо скиллетона
+end note
+deactivate GUI
+
+end
+end
+@enduml
