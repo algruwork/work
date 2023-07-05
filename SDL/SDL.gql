@@ -315,16 +315,6 @@ type Query {
   ): PostCommentsType
 
   """
-  Получить комментарии по списку Uid'ов
-  """
-  getPostParentCommentsByUids(
-    """
-    UIDы комментариев
-    """
-    commentsUids: [UUID!]!
-  ): PostCommentsByUidsType
-
-  """
   Получить все комментарии поста по фильтру
   """
   getPostParentCommentsByUrlHash(
@@ -358,6 +348,21 @@ type Query {
     """
     offset: Int
   ): PostCommentsType
+
+  """
+  Получить комментарии по UIDу
+  """
+  getPostParentCommentsByUids(
+    """
+    UID поста
+    """
+    postUid: UUID!
+
+    """
+    UIDы комментариев
+    """
+    commentUids: [UUID]!
+  ): PostCommentsByUidsType
 
   """
   Получить все комментарии по родительскому комментарию
@@ -600,16 +605,6 @@ type Query {
   ): PostsType
 
   """
-  Получить посты в тренде
-  """
-  getTrendingPosts(categoryId: Int): [PostType]
-
-  """
-  Получить каналы в тренде
-  """
-  getTrendingChannels: [ChannelType]
-
-  """
   Получить категории тематических каналов
   """
   getSystemChannelCategories: [SystemChannelCategoryType]
@@ -769,6 +764,16 @@ type Query {
     postsOffset: Int
 
     """
+    Название поста в плейлисте
+    """
+    postsTitle: String
+
+    """
+    Описание поста в плейлисте
+    """
+    postsDescription: String
+
+    """
     Тип сортировки постов внутри плейлистов
     """
     sort: PlaylistPostsSortingTypeEnum
@@ -794,14 +799,19 @@ type Query {
     access: PlaylistAccessTypeEnum
 
     """
+    DEPRECATED: Состояние плейлиста
+    """
+    state: PlaylistStateEnum
+
+    """
     Состояния плейлиста
     """
     states: [PlaylistStateEnum]
 
     """
-    UID пользователя
+    DEPRECATED: UID пользователя
     """
-    userUid: UUID @deprecated
+    userUid: UUID
 
     """
     UID канала
@@ -829,9 +839,9 @@ type Query {
     postsOffset: Int
 
     """
-    Тип плейлиста
+    DEPRECATED: Тип плейлиста
     """
-    playlistType: PlaylistTypeEnum @deprecated
+    playlistType: PlaylistTypeEnum
 
     """
     Лимит
@@ -844,13 +854,19 @@ type Query {
     offset: Int
 
     """
-    Включать ли в результат плейлисты, которые userUid или channelUid добавили к себе
+    DEPRECATED: Включать ли в результат плейлисты, которые userUid или channelUid добавили к себе
     """
-    withAddedOtherUsersPlaylists: Boolean @deprecated
+    withAddedOtherUsersPlaylists: Boolean
+
     """
-    Фильтра по автору (созданный или добавленный)
+    Фильтр по автору (созданный или добавленный)
     """
-    filterByCreator: PlaylistAuthFilterTypeEnum
+    filterByCreator: PlaylistCreatorFilterTypeEnum
+
+    """
+    Флаг наличия поста в плейлисте
+    """
+    urlHash: String
   ): PlaylistsType
 
   """
@@ -956,11 +972,6 @@ type Query {
     Тип сортировки
     """
     sort: PlaylistSortingTypeEnum
-
-    """
-    Идентификатор видео. Для проверки входимости видео в плейлисты.
-    """
-    urlHash: String
   ): PlaylistCardsType
 
   """
@@ -1777,13 +1788,6 @@ type PostCommentsType {
   totalCommentsCount: Int
 }
 
-type PostCommentsByUidsType {
-  success: Boolean
-  failure: FailResponseType
-  comments: [PostCommentType]
-}
-
-
 type PostCommentType {
   uid: UUID
   parentUid: UUID
@@ -1857,6 +1861,7 @@ enum VideoCommentStateEnum {
   TRANSCODING
   COMPLETED
   DELETED
+  TRANSCODING_FAILED
 }
 
 """
@@ -1871,6 +1876,12 @@ enum PostCommentSortingType {
   AUTHOR_LAST
 }
 
+type PostCommentsByUidsType {
+  success: Boolean
+  failure: FailResponseType
+  comments: [PostCommentType]
+}
+
 type PostVideoCommentsType {
   success: Boolean
   failure: FailResponseType
@@ -1883,7 +1894,6 @@ type PostVideoCommentsType {
 type PostVideoCommentExtendedType {
   videoComment: PostCommentVideoType
   author: UserType
-  authorViaChannel: ChannelType
   startTime: Int
   endTime: Float
 }
@@ -1923,6 +1933,8 @@ type SystemChannelCategoryType {
 }
 
 type SystemChannelType {
+  success: Boolean
+  failure: FailResponseType
   uid: UUID
   systemChannelCategoryId: Int
   title: String
@@ -2119,9 +2131,9 @@ enum PlaylistTypeEnum {
 }
 
 """
-Значения для фильтра по автору (созданный или добавленный)
+An enumeration.
 """
-enum PlaylistAuthFilterTypeEnum {
+enum PlaylistCreatorFilterTypeEnum {
   CREATED
   ADDED
 }
@@ -2436,6 +2448,10 @@ type Mutations {
     socialNetworkType: SocialNetworkType!
     socialNetworkUserId: String!
   ): AddSocialNetworkIdToExistedUserMutation
+
+  """
+  Обновить пользователя
+  """
   updateUser(
     email: String!
     password: String!
@@ -2481,9 +2497,25 @@ type Mutations {
   Запустить процесс удаления пользователя
   """
   deleteUser: DeleteUserMutation
+
+  """
+  Удалить аватар пользователя
+  """
   deleteAvatar: DeleteUserAvatarMutation
+
+  """
+  Выйти из аккаунта
+  """
   logout(refreshToken: String): LogoutMutation
+
+  """
+  Выйти из всех аккаунтов
+  """
   logoutAll(refreshToken: String): LogoutAllMutation
+
+  """
+  Обновить refresh token
+  """
   refreshToken(refreshToken: String!): RefreshTokenMutation
 
   """
@@ -2567,7 +2599,7 @@ type Mutations {
   ): VerifyOneTimePassword
 
   """
-  Изменить пароль
+  Изменить пароль для аккаунта с почтой
   """
   changeEmailPassword(
     """
@@ -2587,7 +2619,7 @@ type Mutations {
   ): ChangeEmailPassword
 
   """
-  Изменить пароль
+  Изменить пароль для аккаунта с мобильным телефоном
   """
   changeMobilePassword(
     """
@@ -2636,7 +2668,7 @@ type Mutations {
   """
   updateSettings(
     """
-    Имя настройки которую мы хотим поменять
+    Имя настройки, которую мы хотим поменять
     """
     name: String!
 
@@ -2646,7 +2678,7 @@ type Mutations {
     type: SettingsType!
 
     """
-    Значение настройки которую мы хотим поменять
+    Значение настройки, которую мы хотим поменять
     """
     value: String!
     valueType: SettingsValueType!
@@ -3142,6 +3174,21 @@ type Mutations {
     """
     playlistUid: UUID!
   ): RemoveOtherUserPlaylist
+
+  """
+  Обновить тип доступа добавленного плейлиста
+  """
+  updateAddedPlaylistAccess(
+    """
+    Тип доступа к плейлисту
+    """
+    access: PlaylistAccessTypeEnum!
+
+    """
+    UID добавленного пользователем плейлиста
+    """
+    playlistUid: UUID!
+  ): UpdateAddedPlaylistAccessMutation
 
   """
   Создать канал
@@ -3774,6 +3821,9 @@ type AddSocialNetworkIdToExistedUserMutation {
   refreshToken: String
 }
 
+"""
+Обновить пользователя
+"""
 type UpdateUserMutation {
   success: Boolean
   failure: FailResponseType
@@ -3838,21 +3888,33 @@ type DeleteUserMutation {
   failure: FailResponseType
 }
 
+"""
+Удалить аватар пользователя
+"""
 type DeleteUserAvatarMutation {
   success: Boolean
   failure: FailResponseType
 }
 
+"""
+Выйти из аккаунта
+"""
 type LogoutMutation {
   success: Boolean
   failure: FailResponseType
 }
 
+"""
+Выйти из всех аккаунтов
+"""
 type LogoutAllMutation {
   success: Boolean
   failure: FailResponseType
 }
 
+"""
+Обновить refresh token
+"""
 type RefreshTokenMutation {
   success: Boolean
   failure: FailResponseType
@@ -3924,7 +3986,7 @@ enum OneTimePasswordOperationTypeEnum {
 }
 
 """
-Изменить пароль
+Изменить пароль для аккаунта с почтой
 """
 type ChangeEmailPassword {
   success: Boolean
@@ -3932,7 +3994,7 @@ type ChangeEmailPassword {
 }
 
 """
-Изменить пароль
+Изменить пароль для аккаунта с мобильным телефоном
 """
 type ChangeMobilePassword {
   success: Boolean
@@ -4294,6 +4356,14 @@ type AddOtherUserPlaylist {
 Удаление чужого плейлиста из списка своипх плейлистов
 """
 type RemoveOtherUserPlaylist {
+  success: Boolean
+  failure: FailResponseType
+}
+
+"""
+Обновить тип доступа добавленного плейлиста
+"""
+type UpdateAddedPlaylistAccessMutation {
   success: Boolean
   failure: FailResponseType
 }
