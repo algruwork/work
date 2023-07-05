@@ -315,6 +315,16 @@ type Query {
   ): PostCommentsType
 
   """
+  Получить комментарии по списку Uid'ов
+  """
+  getPostParentCommentsByUids(
+    """
+    UIDы комментариев
+    """
+    commentsUids: [UUID!]!
+  ): PostCommentsByUidsType
+
+  """
   Получить все комментарии поста по фильтру
   """
   getPostParentCommentsByUrlHash(
@@ -1767,6 +1777,13 @@ type PostCommentsType {
   totalCommentsCount: Int
 }
 
+type PostCommentsByUidsType {
+  success: Boolean
+  failure: FailResponseType
+  comments: [PostCommentType]
+}
+
+
 type PostCommentType {
   uid: UUID
   parentUid: UUID
@@ -1866,6 +1883,7 @@ type PostVideoCommentsType {
 type PostVideoCommentExtendedType {
   videoComment: PostCommentVideoType
   author: UserType
+  authorViaChannel: ChannelType
   startTime: Int
   endTime: Float
 }
