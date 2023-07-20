@@ -1,0 +1,78 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title "Add subtitles. AS IS"
+
+actor User as U
+boundary "Client APP" as GUI
+control "API" as C
+
+autonumber
+
+activate GUI
+GUI -> C: getPost(urlHash)
+activate C
+
+note left C
+%autonumber%. Получить информацию о видео
+end note
+
+C -> GUI: success==true
+deactivate C
+...
+U -> GUI: add subtitles
+GUI -> C: createSubtitleByVideoUid(videoUid)
+activate C
+
+note left C
+%autonumber%. Создать для видео субтитры (пустые)
+end note
+
+C -> GUI: success==true, subtitleId
+deactivate C
+
+GUI -> C: updateSubtitleById(subtitleId, subtitles)
+activate C
+
+note left C
+%autonumber%. Добавить (наполнить) субтитры
+end note
+
+C -> GUI: success==true, updated==true
+deactivate C
+
+GUI -> C: updateSubtitleLanguage(subtitleId, language)
+activate C
+
+note left C
+%autonumber%. Обновить язык субтитров
+end note
+
+C -> GUI: success==true, updated==true
+
+
+deactivate C
+
+GUI -> C: updateSubtitleState(subtitleId, state)
+activate C
+
+note left C
+%autonumber%. Обновить состояние субтитров (активировать)
+end note
+
+C -> GUI: success==true, updated==true
+deactivate C
+
+GUI -> C: getPost(urlHash)
+activate C
+
+note left C
+%autonumber%. Получить обновленный список субтитров для видео
+end note
+
+C -> GUI: success==true
+deactivate C
+
+GUI -> U: updated subtitles list
+deactivate GUI
+
+@enduml

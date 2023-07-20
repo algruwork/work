@@ -139,6 +139,16 @@ type Query {
   ): SearchHistoryType
 
   """
+  Удалить запись из историю поиска пользователя
+  """
+  deleteSearchHistoryQueryByUid(
+    """
+    Идентификатор запроса в истории поиска пользователя
+    """
+    queryUid: UUID!
+  ): DeleteSearchHistoryType
+
+  """
   Получить подсказки по строке
   """
   getSearchSuggestions(
@@ -715,6 +725,41 @@ type Query {
   ): SubscriptionObjectsType
 
   """
+  Получить список видео публикованное на каналах на которые подписан пользователь
+  """
+  getVideosFomSubscribedChannels(
+    """
+    Лимит
+    """
+    limit: Int
+
+    """
+    Оффсет
+    """
+    offset: Int
+  ): PostsType
+
+  """
+  Получить список каналов на которые подписан пользователь
+  """
+  getSubscribedChannels(
+    """
+    Лимит
+    """
+    limit: Int
+
+    """
+    Оффсет
+    """
+    offset: Int
+
+    """
+    Количество постов на канал
+    """
+    topPostsLimit: Int
+  ): SubscribedChannelsType
+
+  """
   Получить информацию о подписках на канал
   """
   getChannelSubscriptionInfo(channelUid: UUID!): ChannelSubscriptionInfoType
@@ -1210,6 +1255,54 @@ type ChannelType {
   dateDelete: DateTime
 }
 
+
+type SubscribedChannelsType {
+  success: Boolean
+  failure: FailResponseType
+  channels: [SubscribedChannel]
+  limit: Int
+  offset: Int
+  totalCount: Int
+}
+
+type SubscribedChannel {
+  uid: UUID
+  state: ChannelStateEnum
+  title: String
+  description: String
+  banner: String
+  logo: String
+  name: String
+  topics: [String]
+  user: UserType
+  publishedVideoCount: Int
+  postedCommentsCount: Int
+  subscribersCount: Int
+  subscribed: Boolean
+  subscriptionNotifications: Boolean
+  dateCreate: DateTime
+  dateUpdate: DateTime
+  topPosts: [PostCardType]
+}
+
+type PostCardType {
+  uid: UUID
+  urlHash: String
+  postType: PostTypeEnum
+  state: PostStateEnum
+  title: String
+  description: String
+  cover: String
+  location: String
+  ageRestriction: PostAgeRestrictionType
+  access: PostAccessTypeEnum
+  dateCreate: DateTime
+  dateUpdate: DateTime
+  video: VideoType
+  watchDate: DateTime
+  videoCommentsCount: Int
+}
+
 """
 An enumeration.
 """
@@ -1640,6 +1733,11 @@ type SearchHistoryType {
   queries: [SearchQueryType]
 }
 
+type DeleteSearchHistoryType {
+  success: Boolean
+  failure: FailResponseType
+  queryUid: UUID
+}
 type SearchQueryType {
   queryText: String
   dateCreate: DateTime
