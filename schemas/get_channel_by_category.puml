@@ -1,71 +1,258 @@
 @startuml
 'https://plantuml.com/sequence-diagram
-title "Trending content"
+title "Подборка trending контента"
 
 actor User as U
 boundary "Client APP" as GUI
 control "API" as C
-
+database "vidaq" as DB
 
 autonumber
-== Создание подборки трендовых каналов ==
+== Агрегация просмотров. Асинхронная часть ==
 loop "Every day at 01:00"
 activate C
 
 
 loop "For each channel"
-C -> C: select post_uid \nfrom posts
+C -> DB: select post_uid \nfrom posts
+activate DB
 note right C
 %autonumber%. Получаем все посты
 end note
+DB -> C: [post_uid]
+deactivate DB
 
-loop "For each post"
-C -> C: insert \ndate_time, post_uid, views_count \ninto post_views_count_history
+loop #LightBlue "For each post"
+alt "Если нет данных об изменении кол-ва просмотров за текущие сутки"
+C -> DB: insert \ndate_time, post_uid, views_count \ninto post_views_count_history
+activate DB
 note right C
 %autonumber%. Сохраняем просмотры за сутки
 end note
+DB -> C: ok
+deactivate DB
 
-C -> C: update post_views_count_per_day_diff
+C -> DB: update post_views_count_per_day_diff
+activate DB
 note right C
 %autonumber%. Считаем и сохраняем изменение
 просмотров за сутки
 end note
+DB -> C: ok
+deactivate DB
+end
 end loop
 
-C -> C: select sum(views_count) \nfrom post_views_count
+alt "Если нет данных об изменении кол-ва просмотров за текущие сутки"
+C -> DB: select sum(views_count) \nfrom post_views_count
+activate DB
 note right C
 %autonumber%. Cуммируем просмотры постов
 end note
+DB -> C: ok
+deactivate DB
 
-C -> C: update channel_views_count
+C -> DB: update channel_views_count
+activate DB
 note right C
 %autonumber%. Обновляем сумму просмотров постов в канале
 end note
+DB -> C: ok
+deactivate DB
 
-C -> C: insert \ndate_time, channel_uid, views_count \ninto channel_views_count_history
+C -> DB: insert \ndate_time, channel_uid, views_count \ninto channel_views_count_history
+activate DB
 note right C
 %autonumber%. Сохраняем просмотры за сутки
 end note
+DB -> C: ok
+deactivate DB
 
-C -> C: update channel_views_count_per_day_diff
+C -> DB: update channel_views_count_per_day_diff
+activate DB
 note right C
 %autonumber%. Считаем и сохраняем изменение
 просмотров на канале за сутки
 end note
-end loop
-
-
+DB -> C: ok
+deactivate DB
 
 end
 deactivate C
-== Запрос подборки тематических каналов ==
-U -> GUI:
-activate GUI
-GUI -> C:
+end loop
+end loop
+
+
+== Формирование подборок по категориям. Асинхронная часть ==
+'в этой части собираем каналы и посты и перекладываем в таблицы подборок
+loop "Every day at 02:00"
+alt "Если нет подборки собранной в текущие сутки"
+alt "Если агрегация просмотров за сутки уже собрана"
+
+C -> DB: select * from system_channel_categories \nwhere is_active==true
 activate C
-C -> GUI:
+note right C
+%autonumber%. Получаем список активных категорий
+end note
+activate DB
+DB -> C: [categories]
+deactivate DB
+
+loop "Для каждой активной категории"
+C -> DB: select * from system_channels \nwhere system_channel_category_id == \n{category_id} limit 1
+note right C
+%autonumber%. Получаем первый канал для каждой активной категории
+end note
+activate DB
+DB -> C: [system_channel_uid]
+deactivate DB
+
+
+loop "Для каждого канала"
+C -> DB: select * from system_playlists \nwhere system_channel_uid == \n{system_channel_uid} limit 1
+note right C
+%autonumber%. Получаем первый плейлист для каждого канала
+end note
+activate DB
+DB -> C: [system_playlist_uid]
+deactivate DB
+end loop
+end loop
+
+loop "Пока не набрали по 100 видео в 1й плейлист 1го канала каждой активной категории"
+C -> DB: select * from channel_views_count_per_day_diff \norder by count_views_diff limit 100
+activate DB
+DB -> C: [post_uid]
+deactivate DB
+C -> C: Фильтруем по активным категориям
+C -> DB: insert into system_playlists_posts \nwhere system_playlist_uid == {system_playlist_uid}
+activate DB
+DB -> C: ok
+deactivate DB
+end loop
 deactivate C
-GUI -> U:
+else #Pink "Агрегация просмотров за сутки еще НЕ собрана"
+C -> C: Отложить джоб на час (но не более 3 раз)
+end
+
+end
+end loop
+
+== Запрос подборок. Синхронная часть ==
+U -> GUI: Переход на страницу каталога
+activate GUI
+
+par
+GUI -> C: getSystemChannelCategories
+activate C
+note left C
+%autonumber%. Получаем категории системных каналов
+end note
+C -> DB: select * from system_channel_categories \nwhere is_active==true
+note right C
+%autonumber%. Получаем список активных категорий
+end note
+activate DB
+DB -> C: [categories]
+deactivate DB
+C -> GUI: [categories]
+deactivate C
+
+GUI -> C: getTrendingPosts
+activate C
+note left C
+%autonumber%. Получаем трендовые посты
+end note
+C -> DB: select * post_views_count_per_day_diff \norder by count_views_diff limit 100
+note right C
+%autonumber%. Получаем топ 100 трендовых каналов
+end note
+activate DB
+DB -> C: ok
+deactivate DB
+C -> DB: join posts ...
+note right C
+%autonumber%. Обогащаем посты
+end note
+activate DB
+DB -> C: ok
+deactivate DB
+C -> GUI: success == true
+deactivate C
+
+GUI -> C: getTrendingChannels
+activate C
+note left C
+%autonumber%. Получаем трендовые каналы
+end note
+C -> DB: select * channel_views_count_per_day_diff \norder by count_views_diff limit 100
+note right C
+%autonumber%. Получаем топ 100 трендовых каналов
+end note
+activate DB
+DB -> C: ok
+deactivate DB
+C -> DB: join posts ...
+note right C
+%autonumber%. Обогащаем постами
+end note
+activate DB
+DB -> C: ok
+deactivate DB
+
+C -> GUI: success == true
+deactivate C
+end
+GUI -> U: Catalog page
+
+...
+
+U -> GUI: Нажатие на категорию
+GUI -> C: getSystemChannel
+activate C
+note left C
+%autonumber%. Получаем канал по категории
+end note
+loop "Для каждой активной категории"
+C -> DB: select * from system_channels
+note right C
+%autonumber%. Получаем первый канал для каждой активной категории
+end note
+activate DB
+DB -> C: [system_channel_uid]
+deactivate DB
+
+
+loop "Для каждого канала"
+C -> DB: select * from system_playlists
+note right C
+%autonumber%. Получаем плейлисты для каждого канала
+end note
+activate DB
+DB -> C: [system_playlist_uid]
+deactivate DB
+loop "Для каждого плейлиста"
+C -> DB: select * from system_playlists_posts
+note right C
+%autonumber%. Получаем посты для каждого канала
+end note
+activate DB
+DB -> C: [post_uid]
+deactivate DB
+C -> DB: join posts ...
+note right C
+%autonumber%. Обогащаем посты
+end note
+activate DB
+DB -> C: ok
+deactivate DB
+
+end loop
+end loop
+end loop
+C -> GUI: success == true
+deactivate C
+GUI -> U: Переход в канал по категории
 deactivate GUI
 
 @enduml
