@@ -1,0 +1,71 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title "Trending content"
+
+actor User as U
+boundary "Client APP" as GUI
+control "API" as C
+
+
+autonumber
+== Создание подборки трендовых каналов ==
+loop "Every day at 01:00"
+activate C
+
+
+loop "For each channel"
+C -> C: select post_uid \nfrom posts
+note right C
+%autonumber%. Получаем все посты
+end note
+
+loop "For each post"
+C -> C: insert \ndate_time, post_uid, views_count \ninto post_views_count_history
+note right C
+%autonumber%. Сохраняем просмотры за сутки
+end note
+
+C -> C: update post_views_count_per_day_diff
+note right C
+%autonumber%. Считаем и сохраняем изменение
+просмотров за сутки
+end note
+end loop
+
+C -> C: select sum(views_count) \nfrom post_views_count
+note right C
+%autonumber%. Cуммируем просмотры постов
+end note
+
+C -> C: update channel_views_count
+note right C
+%autonumber%. Обновляем сумму просмотров постов в канале
+end note
+
+C -> C: insert \ndate_time, channel_uid, views_count \ninto channel_views_count_history
+note right C
+%autonumber%. Сохраняем просмотры за сутки
+end note
+
+C -> C: update channel_views_count_per_day_diff
+note right C
+%autonumber%. Считаем и сохраняем изменение
+просмотров на канале за сутки
+end note
+end loop
+
+
+
+end
+deactivate C
+== Запрос подборки тематических каналов ==
+U -> GUI:
+activate GUI
+GUI -> C:
+activate C
+C -> GUI:
+deactivate C
+GUI -> U:
+deactivate GUI
+
+@enduml
