@@ -1,0 +1,44 @@
+// https://dbdiagram.io/d/64be486202bd1c4a5e9543a9
+
+Table "vidaq_service"."post_views_count" as pvc{
+  "post_uid" uuid [pk, not null, note: 'Post UID']
+  "views_count" int4 [not null, note: 'Views count']
+  "date_update" timestamp [not null, note: 'Date update']
+}
+
+Table "vidaq_service"."channel_views_count" as cvc {
+  "channel_uid" uuid [pk, not null, note: 'Channel UID']
+  "views_count" int4 [not null, note: 'Views by channel count']
+  "date_update" timestamp [not null, note: 'Date update']
+}
+
+Table "vidaq_service"."post_views_count_history" as pvch{
+  "id" serial4 [pk, not null, note: 'ID'] //?
+  "post_uid" uuid [unique, not null, note: 'Post UID']
+  "date_create" timestamp [not null, note: 'Date update']
+  "views_count" int4 [not null, note: 'Views count']
+}
+
+Table "vidaq_service"."channel_views_count_history" as cvch{
+  "id" serial4 [pk, not null, note: 'ID'] //?
+  "channel_uid" uuid [unique, not null, note: 'Channel UID']
+  "date_create" timestamp [not null, note: 'Date update']
+  "views_count" int4 [not null, note: 'Views count']
+}
+
+Table "vidaq_service"."post_views_count_per_day_diff" as pvcpdd{
+  "post_uid" uuid [pk, not null, note: 'Post UID']
+  "views_count" int4 [not null, note: 'Views count']
+  "date_update" timestamp [not null, note: 'Date update']
+}
+
+Table "vidaq_service"."channel_views_count_per_day_diff" as cvcpdd {
+  "channel_uid" uuid [pk, not null, note: 'Channel UID']
+  "views_count" int4 [not null, note: 'Views by channel count']
+  "date_update" timestamp [not null, note: 'Date update']
+}
+
+Ref: pvc.post_uid < pvch.post_uid
+Ref: pvc.post_uid - pvcpdd.post_uid
+Ref: cvc.channel_uid < cvch.channel_uid
+Ref: cvc.channel_uid - cvcpdd.channel_uid

@@ -745,6 +745,41 @@ type Query {
   ): PostsType
 
   """
+  Получить список трендовых каналов
+  """
+  getTrendingChannels(
+    """
+    Лимит
+    """
+    limit: Int
+
+    """
+    Оффсет
+    """
+    offset: Int
+
+    """
+    Количество постов на канал
+    """
+    topPostsLimit: Int
+  ): TrendingChannelsType
+
+  """
+  Получить список трендовых постов
+  """
+  getTrendingPosts(
+    """
+    Лимит
+    """
+    limit: Int
+
+    """
+    Оффсет
+    """
+    offset: Int
+  ): PostsType
+
+  """
   Получить список каналов на которые подписан пользователь
   """
   getSubscribedChannels(
@@ -1268,6 +1303,35 @@ type SubscribedChannelsType {
   limit: Int
   offset: Int
   totalCount: Int
+}
+
+type TrendingChannelsType {
+  success: Boolean
+  failure: FailResponseType
+  channels: [TrendingChannel]
+  limit: Int
+  offset: Int
+  totalCount: Int
+}
+
+type TrendingChannel {
+  uid: UUID
+  state: ChannelStateEnum
+  title: String
+  description: String
+  banner: String
+  logo: String
+  name: String
+  topics: [String]
+  user: UserType
+  publishedVideoCount: Int
+  postedCommentsCount: Int
+  subscribersCount: Int
+  subscribed: Boolean
+  subscriptionNotifications: Boolean
+  dateCreate: DateTime
+  dateUpdate: DateTime
+  topPosts: [PostCardType]
 }
 
 type SubscribedChannel {
