@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" xsi:noNamespaceSchemaLocation="vast.xsd">
+    <Ad id="32508" sequence="1">
+        <InLine>
+            <AdSystem version="3.0">AD_SYSTEM</AdSystem>
+            <AdTitle>AD_SYSTEM - 32508</AdTitle>
+            <Error>
+                <![CDATA[https://aj1907.online/zMDpQkD1aQbtsV08-ObLe3qCIuA7-dQ04qR3NFSmCyg0FcqRZVIufeeJ1i3NxGKihZ_wVGJZxldjgNv4tuj9oDK5QiIHoRehHc4sircNzvIVvWrs4VeGzZg6TKPm9Q7pGQ07hueka8-LeljFewkH0WVClM1wBMiNsy6cKX8bekgbHUg1TeH2NdTh81rgMg6KEgfuaFbf9HpnTeJ_fZvqn3ICfqcyP6GRXC-OkVXbig1ri---3vQutLNK03jNgzLpniVZ6XrUIqPvzEdGZmrVdnGzy9rCu2vYXSwG0UWP29cyPr7gp3K8dEmFo86PD9zTv8N2PagCiFCa4uYcu0RkCslzl-PtvAuU79KJd80Xh93pOULUqtYSsAS10v0sZcBpD7JOPP4vU0W1vYb0kCNbgk3so?DC=HZFI]]>
+            </Error>
+            <Impression>
+                <![CDATA[https://aj1907.online/z8p_S2Aig9dEsPRgN_DprhWDY_LdquNhY-8TeNyOeZUvj2e1WmwhZ_-J1v7AESPe03W61YIpplkpHm5dxegJ-WKfe9W63sVjBelM3acC00-jkGyHVaTrxkYwdrNgOfgzEVKnZZIL5E6Lg5JGwR1_z5VjPvtYOlkB6gzG2V0Hnxk9VMh3Zy21lJ4XBlgJvb5fRqsg7BtgVQm9LZs2AW8pSeI1R-jTZDEtbECZMXJVTBGwuCuZHnGeZuCLAVUqO9ZLh_xtPj5tKxlhEDuDr9Kc8YABjK--SGbmr11XkT9-1gAqe0_46KOmrG2CGI6ureRDx2ImsqmUrWwxY3UvZ3DePka0otUPg86sr6evIarUvc4Y?DC=HZFI]]>
+            </Impression>
+            <Impression>
+                <![CDATA[https://pimg.vb17123filippaaniketos.pw/?type=2&service=ads&banner=slotman_roll&advertiser=Slotman*Rolls&custom=VASTHost_Fail&atype=9]]>
+            </Impression>
+            <Creatives>
+                <Creative>
+                    <Linear skipoffset="00:00:10">
+                        <Duration>00:00:15</Duration>
+                        <VideoClicks>
+                            <ClickThrough>
+                                <![CDATA[https://aj1907.online/zp6GoIOH6ixQnIjNSdmUmqifWOVPDoB6vEJZdS3ljysI8FK2PuHX9IbfEdgf7wr8BQDGrbhERfmBLMKQMdvWnyzXA15YFlIl82dOziemKni8CgLvM7PahlDzPv_15s8uAnafcQ2khtECU8Fd9uWz8cnzDcg_-k_Os7gYSq_iQdKiC6f8V-cExIOl519ZBqD54SR7zUCSObRGcwqrvJEDwis54IvKzJBDNWt8qjF9-q0yT3zuT3nW4eAgBW5Svtt88KjM6kDePgIPZ2SPhTEmK4yHlEK4BQANqVLA9Iys?DC=HZFI&u=https%3A%2F%2Fheroicaffiliatesmedia.com%2Faa588572c]]>
+                            </ClickThrough>
+                            <ClickTracking>
+                                <![CDATA[https://pimg.vb17123filippaaniketos.pw/?type=1&service=ads&banner=slotman_roll&advertiser=Slotman*Rolls&custom=VASTHost_Fail&atype=9]]>
+                            </ClickTracking>
+                        </VideoClicks>
+                        <TrackingEvents>
+                            <Tracking event="start">
+                                <![CDATA[https://aj1907.online/at?subId=MSMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="firstQuartile">
+                                <![CDATA[https://aj1907.online/at?subId=MiMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="midpoint">
+                                <![CDATA[https://aj1907.online/at?subId=MyMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="thirdQuartile">
+                                <![CDATA[https://aj1907.online/at?subId=NCMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="complete">
+                                <![CDATA[https://aj1907.online/at?subId=NSMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="creativeView">
+                                <![CDATA[https://aj1907.online/at?subId=NiMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="mute">
+                                <![CDATA[https://aj1907.online/at?subId=NyMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="unmute">
+                                <![CDATA[https://aj1907.online/at?subId=OCMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="pause">
+                                <![CDATA[https://aj1907.online/at?subId=OSMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="resume">
+                                <![CDATA[https://aj1907.online/at?subId=MTAjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="fullscreen">
+                                <![CDATA[https://aj1907.online/at?subId=MTEjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="exitFullscreen">
+                                <![CDATA[https://aj1907.online/at?subId=MTIjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="expand">
+                                <![CDATA[https://aj1907.online/at?subId=MTMjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="collapse">
+                                <![CDATA[https://aj1907.online/at?subId=MTQjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="skip">
+                                <![CDATA[https://aj1907.online/at?subId=MTUjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="adOpportunity">
+                                <![CDATA[https://aj1907.online/at?subId=MTYjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="adLoaded">
+                                <![CDATA[https://aj1907.online/at?subId=MTcjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                        </TrackingEvents>
+                        <MediaFiles>
+                            <MediaFile bitrate="1552" delivery="progressive" height="484" maintainAspectRatio="true" scalable="true" type="video/mp4" width="860">
+                                <![CDATA[https://cdn-t.vb17123filippaaniketos.pw/content/stream/Slotman/slotman_preroll_so_zvykom.mp4]]>
+                            </MediaFile>
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+    <Ad id="32509" sequence="2">
+        <InLine>
+            <AdSystem version="3.0">AD_SYSTEM</AdSystem>
+            <AdTitle>AD_SYSTEM - 32508</AdTitle>
+            <Error>
+                <![CDATA[https://aj1907.online/zMDpQkD1aQbtsV08-ObLe3qCIuA7-dQ04qR3NFSmCyg0FcqRZVIufeeJ1i3NxGKihZ_wVGJZxldjgNv4tuj9oDK5QiIHoRehHc4sircNzvIVvWrs4VeGzZg6TKPm9Q7pGQ07hueka8-LeljFewkH0WVClM1wBMiNsy6cKX8bekgbHUg1TeH2NdTh81rgMg6KEgfuaFbf9HpnTeJ_fZvqn3ICfqcyP6GRXC-OkVXbig1ri---3vQutLNK03jNgzLpniVZ6XrUIqPvzEdGZmrVdnGzy9rCu2vYXSwG0UWP29cyPr7gp3K8dEmFo86PD9zTv8N2PagCiFCa4uYcu0RkCslzl-PtvAuU79KJd80Xh93pOULUqtYSsAS10v0sZcBpD7JOPP4vU0W1vYb0kCNbgk3so?DC=HZFI]]>
+            </Error>
+            <Impression>
+                <![CDATA[https://aj1907.online/z8p_S2Aig9dEsPRgN_DprhWDY_LdquNhY-8TeNyOeZUvj2e1WmwhZ_-J1v7AESPe03W61YIpplkpHm5dxegJ-WKfe9W63sVjBelM3acC00-jkGyHVaTrxkYwdrNgOfgzEVKnZZIL5E6Lg5JGwR1_z5VjPvtYOlkB6gzG2V0Hnxk9VMh3Zy21lJ4XBlgJvb5fRqsg7BtgVQm9LZs2AW8pSeI1R-jTZDEtbECZMXJVTBGwuCuZHnGeZuCLAVUqO9ZLh_xtPj5tKxlhEDuDr9Kc8YABjK--SGbmr11XkT9-1gAqe0_46KOmrG2CGI6ureRDx2ImsqmUrWwxY3UvZ3DePka0otUPg86sr6evIarUvc4Y?DC=HZFI]]>
+            </Impression>
+            <Impression>
+                <![CDATA[https://pimg.vb17123filippaaniketos.pw/?type=2&service=ads&banner=slotman_roll&advertiser=Slotman*Rolls&custom=VASTHost_Fail&atype=9]]>
+            </Impression>
+            <Creatives>
+                <Creative>
+                    <Linear skipoffset="00:00:25">
+                        <Duration>00:00:15</Duration>
+                        <VideoClicks>
+                            <ClickThrough>
+                                <![CDATA[https://aj1907.online/zp6GoIOH6ixQnIjNSdmUmqifWOVPDoB6vEJZdS3ljysI8FK2PuHX9IbfEdgf7wr8BQDGrbhERfmBLMKQMdvWnyzXA15YFlIl82dOziemKni8CgLvM7PahlDzPv_15s8uAnafcQ2khtECU8Fd9uWz8cnzDcg_-k_Os7gYSq_iQdKiC6f8V-cExIOl519ZBqD54SR7zUCSObRGcwqrvJEDwis54IvKzJBDNWt8qjF9-q0yT3zuT3nW4eAgBW5Svtt88KjM6kDePgIPZ2SPhTEmK4yHlEK4BQANqVLA9Iys?DC=HZFI&u=https%3A%2F%2Fheroicaffiliatesmedia.com%2Faa588572c]]>
+                            </ClickThrough>
+                            <ClickTracking>
+                                <![CDATA[https://pimg.vb17123filippaaniketos.pw/?type=1&service=ads&banner=slotman_roll&advertiser=Slotman*Rolls&custom=VASTHost_Fail&atype=9]]>
+                            </ClickTracking>
+                        </VideoClicks>
+                        <TrackingEvents>
+                            <Tracking event="start">
+                                <![CDATA[https://aj1907.online/at?subId=MSMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="firstQuartile">
+                                <![CDATA[https://aj1907.online/at?subId=MiMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="midpoint">
+                                <![CDATA[https://aj1907.online/at?subId=MyMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="thirdQuartile">
+                                <![CDATA[https://aj1907.online/at?subId=NCMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="complete">
+                                <![CDATA[https://aj1907.online/at?subId=NSMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="creativeView">
+                                <![CDATA[https://aj1907.online/at?subId=NiMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="mute">
+                                <![CDATA[https://aj1907.online/at?subId=NyMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="unmute">
+                                <![CDATA[https://aj1907.online/at?subId=OCMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="pause">
+                                <![CDATA[https://aj1907.online/at?subId=OSMxMjU3IzMwNyM4OTZ8MzI1MDh8Tkx8M3wxfHxhRzl6ZEEqVmtGVFZFaHZjM1JmUm1GcGJBfDUxN3p0cm9yYnNnbXw4YTQwODc1Yy01M2M1LTU2NmItOWFlNi1iMzA1Y2Q1OGE0ZmF8fHwx&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="resume">
+                                <![CDATA[https://aj1907.online/at?subId=MTAjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="fullscreen">
+                                <![CDATA[https://aj1907.online/at?subId=MTEjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="exitFullscreen">
+                                <![CDATA[https://aj1907.online/at?subId=MTIjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="expand">
+                                <![CDATA[https://aj1907.online/at?subId=MTMjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="collapse">
+                                <![CDATA[https://aj1907.online/at?subId=MTQjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="skip">
+                                <![CDATA[https://aj1907.online/at?subId=MTUjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="adOpportunity">
+                                <![CDATA[https://aj1907.online/at?subId=MTYjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                            <Tracking event="adLoaded">
+                                <![CDATA[https://aj1907.online/at?subId=MTcjMTI1NyMzMDcjODk2fDMyNTA4fE5MfDN8MXx8YUc5emRBKlZrRlRWRWh2YzNSZlJtRnBiQXw1MTd6dHJvcmJzZ218OGE0MDg3NWMtNTNjNS01NjZiLTlhZTYtYjMwNWNkNThhNGZhfHx8MQ&t=1691998146556]]>
+                            </Tracking>
+                        </TrackingEvents>
+                        <MediaFiles>
+                            <MediaFile bitrate="1552" delivery="progressive" height="484" maintainAspectRatio="true" scalable="true" type="video/mp4" width="860">
+                                <![CDATA[https://cdn-t.vb17123filippaaniketos.pw/content/stream/Slotman/slotman_preroll_so_zvykom.mp4]]>
+                            </MediaFile>
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+</VAST>
