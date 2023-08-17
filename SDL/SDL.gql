@@ -777,6 +777,11 @@ type Query {
     Оффсет
     """
     offset: Int
+
+    """
+    Список id emoji для фильтрации постов
+    """
+    emojiIds: [Int!]
   ): PostsType
 
   """
@@ -2112,6 +2117,7 @@ type SystemChannelType {
   dateCreate: DateTime
   dateUpdate: DateTime
   dateDelete: DateTime
+  subscribersCount: Int
 }
 
 type SystemPlaylistType {
@@ -2193,6 +2199,11 @@ type SubscriptionObjectType {
   Логотип
   """
   logo: String
+
+  """
+  Является ли канал тематическим
+  """
+  isThematicChannel: Boolean
 }
 
 type ChannelSubscriptionInfoType {
@@ -3010,6 +3021,16 @@ type Mutations {
   Подписаться на канал
   """
   subscribeChannel(
+    """
+    UID канала
+    """
+    channelUid: UUID!
+  ): SubscribeChannelMutation
+
+  """
+  Подписаться на тематический канал
+  """
+  subscribeThematicChannel(
     """
     UID канала
     """
