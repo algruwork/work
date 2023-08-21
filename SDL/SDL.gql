@@ -1118,7 +1118,7 @@ type Query {
   """
   Получить список feature toggles
   """
-  getFeatureToggles(countryCode: CountriesCodeTypeEnum): GetFeatureTogglesQuery
+  getFeatureToggles: GetFeatureTogglesQuery
 }
 
 type UserLocationType {
@@ -4904,19 +4904,32 @@ enum CountriesCodeTypeEnum {
   RU
 }
 
-"""
-Feature toggle
-"""
-type BooleanFeatureTogglesType {
+
+interface FeatureTogglesInterfaceType {
   name: String!
-  value: Boolean!
 }
 
 """
-Получить feature toggles
+Feature toggle
+"""
+type BooleanFeatureTogglesType implements FeatureTogglesInterfaceType{
+  name: String!
+  switchOn: Boolean!
+}
+
+"""
+Feature toggle
+"""
+type StringFeatureTogglesType implements FeatureTogglesInterfaceType{
+  name: String!
+  value: String!
+}
+
+"""
+Get feature toggles
 """
 type GetFeatureTogglesQuery {
   success: Boolean
   failure: FailResponseType
-  toggles: [BooleanFeatureTogglesType]
+  toggles: [FeatureTogglesInterfaceType]
 }
