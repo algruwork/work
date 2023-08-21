@@ -1114,6 +1114,11 @@ type Query {
     """
     contentType: ComplaintContentTypeEnum
   ): ComplaintCategoriesType
+
+  """
+  Получить список feature toggles
+  """
+  getFeatureToggles: GetFeatureTogglesQuery
 }
 
 type UserLocationType {
@@ -4890,4 +4895,21 @@ type DeleteSearchHistoryQueryMutation {
   ID поискового запроса
   """
   queryId: Int
+}
+
+"""
+Получить feature toggles
+"""
+type GetFeatureTogglesQuery {
+  success: Boolean
+  failure: FailResponseType
+  toggles: [BooleanFeatureTogglesType]
+}
+
+"""
+Feature toggle
+"""
+type BooleanFeatureTogglesType {
+  name: String
+  value: Boolean
 }

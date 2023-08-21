@@ -1,6 +1,6 @@
 @startuml
 'https://plantuml.com/sequence-diagram
-title "Feature toogls (MVP)"
+title "Feature toggles (MVP)"
 
 actor User as U
 boundary "Client APP" as GUI
@@ -16,13 +16,13 @@ activate C
 ...
 ==When user visit page==
 
-U -> GUI: Visit page with feature toogl
+U -> GUI: Visit page with feature toggle
 activate GUI
 
-GUI -> GUI: any feature toogls in session storage?
+GUI -> GUI: any feature toggles in session storage?
 
-alt "NO feature toogls in session storage"
-GUI -> C: getFeatureToogls
+alt "NO feature toggles in session storage"
+GUI -> C: getFeatureToggles
 
 alt #Pink "Unsuccessful response"
 C --> GUI: success == false
@@ -30,11 +30,11 @@ GUI --> U: Render page by default
 else #LightGreen "Successful response"
 C -> GUI: success == true
 deactivate C
-GUI -> GUI: Save feature toogls in session storage
+GUI -> GUI: Save feature toggles in session storage
 end
 end
 
-GUI -> U: Apply feature toogls\nand render page
+GUI -> U: Apply feature toggles\nand render page
 deactivate GUI
 
 @enduml
