@@ -139,16 +139,6 @@ type Query {
   ): SearchHistoryType
 
   """
-  Удалить запись из историю поиска пользователя
-  """
-  deleteSearchHistoryQueryByUid(
-    """
-    Идентификатор запроса в истории поиска пользователя
-    """
-    queryUid: UUID!
-  ): DeleteSearchHistoryType
-
-  """
   Получить подсказки по строке
   """
   getSearchSuggestions(
@@ -564,10 +554,25 @@ type Query {
     emojiIds: [Int]
 
     """
-    Перемешать порядок постов в текущем оффсете
+    Перемешать случайно список или нет
     """
-    shuffleOn: Boolean # просмотренные будет исключать фронт
+    shuffleOn: Boolean
 
+    """
+    Лимит
+    """
+    limit: Int
+
+    """
+    Оффсет
+    """
+    offset: Int
+  ): PostsType
+
+  """
+  Получить список видео публикованное на каналах, на которые подписан пользователь
+  """
+  getVideosFromSubscribedChannels(
     """
     Лимит
     """
@@ -730,84 +735,29 @@ type Query {
   ): SubscriptionObjectsType
 
   """
-  Получить список видео публикованное на каналах на которые подписан пользователь
-  """
-  getVideosFomSubscribedChannels(
-    """
-    Лимит
-    """
-    limit: Int
-
-    """
-    Оффсет
-    """
-    offset: Int
-  ): PostsType
-
-  """
-  Получить список трендовых каналов
-  """
-  getTrendingChannels(
-    """
-    Лимит
-    """
-    limit: Int
-
-    """
-    Оффсет
-    """
-    offset: Int
-
-    """
-    Количество постов на канал
-    """
-    topPostsLimit: Int
-  ): TrendingChannelsType
-
-  """
-  Получить список трендовых постов
-  """
-  getTrendingPosts(
-    """
-    Лимит
-    """
-    limit: Int
-
-    """
-    Оффсет
-    """
-    offset: Int
-
-    """
-    Список id emoji для фильтрации постов
-    """
-    emojiIds: [Int!]
-  ): PostsType
-
-  """
-  Получить список каналов на которые подписан пользователь
-  """
-  getSubscribedChannels(
-    """
-    Лимит
-    """
-    limit: Int
-
-    """
-    Оффсет
-    """
-    offset: Int
-
-    """
-    Количество постов на канал
-    """
-    topPostsLimit: Int
-  ): SubscribedChannelsType
-
-  """
   Получить информацию о подписках на канал
   """
   getChannelSubscriptionInfo(channelUid: UUID!): ChannelSubscriptionInfoType
+
+  """
+  Получить список каналов на которые подписан пользователь-канал
+  """
+  getSubscribedChannels(
+    """
+    Количество постов на канал
+    """
+    topPostsLimit: Int
+
+    """
+    Лимит
+    """
+    limit: Int
+
+    """
+    Оффсет
+    """
+    offset: Int
+  ): SubscribedChannelsType
 
   """
   Получить информацию о количестве лайков на посте
@@ -847,6 +797,11 @@ type Query {
     Лимит количества постов в плейлисте
     """
     postsLimit: Int
+
+    """
+    Состояния постов плейлиста текущего юзера
+    """
+    postStates: [PostStateEnum]
 
     """
     Оффсет количества постов в плейлисте
@@ -1074,6 +1029,11 @@ type Query {
   """
   getFavoritedPosts(
     """
+    Название поста
+    """
+    title: String
+
+    """
     Тип сортировки
     """
     orderBy: FavoritesSortingTypeEnum
@@ -1093,6 +1053,11 @@ type Query {
   Получить все посты по фильтру
   """
   getLikedPosts(
+    """
+    Название поста
+    """
+    title: String
+
     """
     Тип сортировки
     """
@@ -1204,6 +1169,7 @@ type PostType {
   urlHash: String
   reactions: [EmojiCounterType]
   userReactionEmojiId: Int
+  userReaction: EmojiType
   playlists: [UUID]
   isFavorite: Boolean
   lastTimestamp: Int
@@ -1298,83 +1264,6 @@ type ChannelType {
   dateCreate: DateTime
   dateUpdate: DateTime
   dateDelete: DateTime
-}
-
-
-type SubscribedChannelsType {
-  success: Boolean
-  failure: FailResponseType
-  channels: [SubscribedChannel]
-  limit: Int
-  offset: Int
-  totalCount: Int
-}
-
-type TrendingChannelsType {
-  success: Boolean
-  failure: FailResponseType
-  channels: [TrendingChannel]
-  limit: Int
-  offset: Int
-  totalCount: Int
-}
-
-type TrendingChannel {
-  uid: UUID
-  state: ChannelStateEnum
-  title: String
-  description: String
-  banner: String
-  logo: String
-  name: String
-  topics: [String]
-  user: UserType
-  publishedVideoCount: Int
-  postedCommentsCount: Int
-  subscribersCount: Int
-  subscribed: Boolean
-  subscriptionNotifications: Boolean
-  dateCreate: DateTime
-  dateUpdate: DateTime
-  topPosts: [PostCardType]
-}
-
-type SubscribedChannel {
-  uid: UUID
-  state: ChannelStateEnum
-  title: String
-  description: String
-  banner: String
-  logo: String
-  name: String
-  topics: [String]
-  user: UserType
-  publishedVideoCount: Int
-  postedCommentsCount: Int
-  subscribersCount: Int
-  subscribed: Boolean
-  subscriptionNotifications: Boolean
-  dateCreate: DateTime
-  dateUpdate: DateTime
-  topPosts: [PostCardType]
-}
-
-type PostCardType {
-  uid: UUID
-  urlHash: String
-  postType: PostTypeEnum
-  state: PostStateEnum
-  title: String
-  description: String
-  cover: String
-  location: String
-  ageRestriction: PostAgeRestrictionType
-  access: PostAccessTypeEnum
-  dateCreate: DateTime
-  dateUpdate: DateTime
-  video: VideoType
-  watchDate: DateTime
-  videoCommentsCount: Int
 }
 
 """
@@ -1639,6 +1528,26 @@ type EmojiCounterType {
   dateUpdate: DateTime
 }
 
+type EmojiType {
+  id: Int
+  name: String
+  connotation: PostLikeStatusEnum
+  shadowColor: String
+  dateFrom: DateTime
+  dateTo: DateTime
+  dateCreate: DateTime
+  dateUpdate: DateTime
+}
+
+"""
+An enumeration.
+"""
+enum PostLikeStatusEnum {
+  UNLIKE
+  LIKE
+  DISLIKE
+}
+
 type ExtendedChannelType {
   success: Boolean
   failure: FailResponseType
@@ -1807,14 +1716,11 @@ type SearchHistoryType {
   queries: [SearchQueryType]
 }
 
-type DeleteSearchHistoryType {
-  success: Boolean
-  failure: FailResponseType
-  queryUid: UUID
-}
 type SearchQueryType {
+  id: Int
   queryText: String
   dateCreate: DateTime
+  dateUpdate: DateTime
 }
 
 type SearchSuggestionsType {
@@ -2066,6 +1972,7 @@ type PostVideoCommentsType {
 type PostVideoCommentExtendedType {
   videoComment: PostCommentVideoType
   author: UserType
+  authorViaChannel: ChannelType
   startTime: Int
   endTime: Float
 }
@@ -2117,7 +2024,6 @@ type SystemChannelType {
   dateCreate: DateTime
   dateUpdate: DateTime
   dateDelete: DateTime
-  subscribersCount: Int
 }
 
 type SystemPlaylistType {
@@ -2199,11 +2105,6 @@ type SubscriptionObjectType {
   Логотип
   """
   logo: String
-
-  """
-  Является ли канал тематическим
-  """
-  isThematicChannel: Boolean
 }
 
 type ChannelSubscriptionInfoType {
@@ -2212,6 +2113,53 @@ type ChannelSubscriptionInfoType {
   channelUid: UUID
   userSubscriptionStatus: String
   subscriptionsCount: Int
+}
+
+type SubscribedChannelsType {
+  success: Boolean
+  failure: FailResponseType
+  channels: [SubscribedChannelType]
+  limit: Int
+  offset: Int
+  totalCount: Int
+}
+
+type SubscribedChannelType {
+  uid: UUID
+  state: ChannelStateEnum
+  title: String
+  description: String
+  banner: String
+  logo: String
+  name: String
+  topics: [String]
+  user: UserType
+  publishedVideoCount: Int
+  postedCommentsCount: Int
+  subscribersCount: Int
+  subscribed: Boolean
+  subscriptionNotifications: Boolean
+  dateCreate: DateTime
+  dateUpdate: DateTime
+  topPosts: [PostCardType]
+}
+
+type PostCardType {
+  uid: UUID
+  urlHash: String
+  postType: PostTypeEnum
+  state: PostStateEnum
+  title: String
+  description: String
+  cover: String
+  location: String
+  ageRestriction: PostAgeRestrictionType
+  access: PostAccessTypeEnum
+  dateCreate: DateTime
+  dateUpdate: DateTime
+  video: VideoType
+  watchDate: DateTime
+  videoCommentsCount: Int
 }
 
 type PostLikeCounterType {
@@ -2234,15 +2182,6 @@ type PostLikeType {
   dateUpdate: DateTime
 }
 
-"""
-An enumeration.
-"""
-enum PostLikeStatusEnum {
-  UNLIKE
-  LIKE
-  DISLIKE
-}
-
 type CommentLikeCounterType {
   success: Boolean
   failure: FailResponseType
@@ -2259,17 +2198,6 @@ type CommentLikeType {
   commentUid: UUID
   userUid: UUID
   status: PostLikeStatusEnum
-  dateCreate: DateTime
-  dateUpdate: DateTime
-}
-
-type EmojiType {
-  id: Int
-  name: String
-  connotation: PostLikeStatusEnum
-  shadowColor: String
-  dateFrom: DateTime
-  dateTo: DateTime
   dateCreate: DateTime
   dateUpdate: DateTime
 }
@@ -3021,16 +2949,6 @@ type Mutations {
   Подписаться на канал
   """
   subscribeChannel(
-    """
-    UID канала
-    """
-    channelUid: UUID!
-  ): SubscribeChannelMutation
-
-  """
-  Подписаться на тематический канал
-  """
-  subscribeThematicChannel(
     """
     UID канала
     """
@@ -3882,6 +3800,16 @@ type Mutations {
     """
     url: String
   ): CreateComplaintMutation
+
+  """
+  Удалить поисковый запрос пользователя
+  """
+  deleteSearchHistoryQueryById(
+    """
+    ID поискового запроса
+    """
+    queryId: Int!
+  ): DeleteSearchHistoryQueryMutation
 }
 
 """
@@ -4950,3 +4878,16 @@ specified by
 [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
 """
 scalar Time
+
+"""
+Удалить поисковый запрос пользователя
+"""
+type DeleteSearchHistoryQueryMutation {
+  success: Boolean
+  failure: FailResponseType
+
+  """
+  ID поискового запроса
+  """
+  queryId: Int
+}
