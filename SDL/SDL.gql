@@ -1118,7 +1118,7 @@ type Query {
   """
   Получить список feature toggles
   """
-  getFeatureToggles: GetFeatureTogglesQuery
+  getFeatureToggles(countryCode: CountriesCodeTypeEnum): GetFeatureTogglesQuery
 }
 
 type UserLocationType {
@@ -4898,18 +4898,25 @@ type DeleteSearchHistoryQueryMutation {
 }
 
 """
-Получить feature toggles
+ISO countries codes
 """
-type GetFeatureTogglesQuery {
-  success: Boolean
-  failure: FailResponseType
-  toggles: [BooleanFeatureTogglesType]
+enum CountriesCodeTypeEnum {
+  RU
 }
 
 """
 Feature toggle
 """
 type BooleanFeatureTogglesType {
-  name: String
-  value: Boolean
+  name: String!
+  value: Boolean!
+}
+
+"""
+Получить feature toggles
+"""
+type GetFeatureTogglesQuery {
+  success: Boolean
+  failure: FailResponseType
+  toggles: [BooleanFeatureTogglesType]
 }
