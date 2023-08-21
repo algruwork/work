@@ -5,12 +5,13 @@ title "Feature toggles (MVP)"
 actor User as U
 boundary "Client APP" as GUI
 control "API" as C
+control "Backoffice" as B
 
 autonumber
 
 ==When service start==
 
-C --> C: Get values from env
+C --> C: Get local from env
 activate C
 
 ...
@@ -23,6 +24,10 @@ GUI -> GUI: any feature toggles in session storage?
 
 alt "NO feature toggles in session storage"
 GUI -> C: getFeatureToggles
+C -> B: get feature toggles filtered by local
+activate B
+B -> C: feature toggles
+deactivate B
 
 alt #Pink "Unsuccessful response"
 C --> GUI: success == false

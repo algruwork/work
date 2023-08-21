@@ -4897,14 +4897,6 @@ type DeleteSearchHistoryQueryMutation {
   queryId: Int
 }
 
-"""
-ISO countries codes
-"""
-enum CountriesCodeTypeEnum {
-  RU
-}
-
-
 interface FeatureTogglesInterfaceType {
   name: String!
 }
