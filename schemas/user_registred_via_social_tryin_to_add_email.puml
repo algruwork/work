@@ -1,0 +1,59 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+User <<Authorized\n user>> as au
+User <<Unauthorized\n user>> as uu
+usecase "Change password" as cp #line.dashed;line:red;text:red;
+'Поле неактивно до тех пока не добавлен email
+'когда email добавлен и верифицирован появляется "Set" в поле password
+'если email не верифицирован, то он отображается с "часиками" + кнопка "Verify"
+usecase "Add email" as ae
+usecase "Enter OTP" as eo #line.dashed;line:red;text:red;
+'Не добавляем в профиль не подтвержденный email
+usecase "Login via email" as lve 
+usecase "Forget password" as fp
+usecase "Enter equal email" as eee
+usecase "Enter not equal email" as enee
+'Кнопка отсутствует, если не привязана УЗ Vidaq (логин + пароль)?
+'Если привязана УЗ Vidaq (логин + пароль)
+'Проверка на то, что email не привязан к другому аккаунту
+usecase "Enter password" as ep
+usecase "Join social network & vidaq acc" as ja
+
+au --> ae #line:green;: B
+note right of au
+Предусловия:
+ - Пользователь зарегистрирован только через социальную сеть
+ - Пользователь авторизован
+ - Пользователь зашел в профиль
+end note
+note right of uu
+Предусловия:
+ - Пользователь зарегистрирован только через социальную сеть
+ - Пользователь НЕ авторизован
+end note
+note left of eee
+Email тот же что и использовался 
+при регистрации через соцсеть
+end note
+
+ae --> eee #line:green;: B1
+'Что если такой email существует у другой УЗ?
+'Не добавляем в профиль не подтвержденный email - не даем повода для паники
+
+au --> cp #line.dashed;line:red; : A (As Is, \n кнопки быть \nне должно)
+
+uu --> lve #line:blue;: C
+lve --> eee #line:blue;: C1
+eee --> ep #line:blue;: C1
+ep --> fp #line:blue;: C1
+lve --> fp #line.dashed;line:blue; :C2
+fp --> eee #line:blue;: C
+eee --> eo: B, C
+ae --> enee #line:green;: B2
+enee --> eo #line:green;: B2
+uu --> (Login via new social network): D
+'Здесь сформируется новая УЗ
+eo --> ja #line:blue;: C
+eo --> (Save profile) #line:green;: B
+@enduml

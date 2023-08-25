@@ -1,0 +1,20 @@
+@startuml
+title "Authorized user"
+(*) --> "Add email"
+-down-> "Check exist email"
+note right
+Может использоваться
+любой email, на который
+еще не зарегистрирована
+УЗ в сервисе
+end note
+-left-> "OTP page"
+if "Close page?" then
+-> [true] (*)
+else
+-right-> [false] "Enter OTP"
+if "Correct OTP?" then
+--> [true] (*)
+else
+--> "OTP page"
+@enduml
