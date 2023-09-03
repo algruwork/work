@@ -1324,6 +1324,7 @@ type UserType {
   playerSettings: PlayerSettingsType
   unconsumedCredentials: [UnconsumedCredential]
   defaultAvatarColorStyle: String
+  associatedSocialNetworks: [associatedSocialNetwork] 
 }
 
 """
@@ -1353,6 +1354,12 @@ value as specified by
 [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
 """
 scalar Date
+
+type associatedSocialNetwork {
+  socialNetworkType: SocialNetworkType!
+  socialNetworkUserId: String!
+  socialNetworkUserName: String!
+}
 
 type SocialProfileLinkType {
   success: Boolean
@@ -2559,6 +2566,8 @@ type Mutations {
     socialNetworkType: SocialNetworkType!
     socialNetworkUserId: String!
   ): AddSocialNetworkIdToExistedUserMutation
+
+  add
 
   """
   Обновить пользователя

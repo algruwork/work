@@ -1,0 +1,68 @@
+@startuml
+
+title "Registration details. Add social network auth"
+boundary "Identity Provider" as SN
+actor User as U
+boundary "Client APP" as GUI
+control "access_service" as AC
+database "access_service" as DB
+
+autonumber
+
+U-> GUI: Login via Social Network
+activate GUI
+GUI -> AC: query getSocialNetworkAuthUri(socialNetworkType, redirectUri)
+activate AC
+AC -> GUI: Uri
+deactivate AC
+GUI -> SN: Open Uri (+redirectUri)
+deactivate GUI
+activate SN
+SN -> U: Accept request
+activate U
+U -> SN: Accept
+deactivate U
+SN -> GUI: Redirect to redirectUri (+code)
+deactivate SN
+activate GUI
+GUI -> AC: mutation AddSocialNetwork(socialNetworkType, code)
+alt #Pink "No auth token provided"
+activate AC
+AC -> GUI: success = false, 401 Unauthorized
+end alt
+AC -> SN: Request user data by socialNetworkType and code
+activate SN
+SN -> AC: email, Social Network Id, Name, Avatar
+deactivate SN
+alt #Pink "if social network session for this socialNetworkId already exist"
+AC -> GUI: success = false, 409 Conflict
+GUI -> U: This social network already used for authentification
+else #LightGreen "no social_network_session for this socialNetworkId already exist"
+
+
+AC -> DB: create social network session with user_uid
+activate DB
+
+note left DB
+id,
+user_uid,
+social_network_type,
+social_network_user_id,
+data,
+date_create,
+date_update,
+**email**
+**name** (data.name)
+end note
+
+DB -> AC: ok
+deactivate DB
+
+
+AC -> GUI: success = true
+deactivate AC
+GUI -> U: Registration details
+deactivate GUI
+end
+
+@enduml
