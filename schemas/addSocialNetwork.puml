@@ -25,7 +25,7 @@ deactivate U
 SN -> GUI: Redirect to redirectUri (+code)
 deactivate SN
 activate GUI
-GUI -> AC: mutation AddSocialNetwork(socialNetworkType, code)
+GUI -> AC: mutation addSocialNetwork(socialNetworkType, code)
 alt #Pink "No auth token provided"
 activate AC
 AC -> GUI: success = false, 401 Unauthorized

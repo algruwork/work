@@ -1,0 +1,49 @@
+
+Table "social_network_sessions" as sns {
+  "id" SERIAL [pk, not null, increment, note: 'ID']
+  "user_uid" uuid [note: 'Original user'] // if added - that user merge accounts
+  "social_network_type" "character varying(255)" [not null, note: 'Social network type (VKCOM, FSCOM)']
+  "social_network_user_id" "character varying(255)" [not null, note: 'Social network user uid']
+  "data" json [note: 'Data']
+  "emial" "character varying(254)" [note: 'Email address'] // new, from social network
+  "date_create" timestamp [not null, note: 'Date create']
+  "date_update" timestamp [not null, note: 'Date update']
+}
+
+
+Table "users" as u{
+  "id" SERIAL [pk, not null, increment, note: 'ID']
+  "uid" uuid [note: 'UUID']
+  "email" "character varying(254)" [note: 'Email address']
+  "name" "character varying(30)" [not null, note: 'First and last name']
+  "password" "character varying(128)" [not null, note: 'Hashed password']
+  "state" "character varying(30)" [not null, note: 'State']
+  "avatar" "character varying(500)" [note: 'Avatar path']
+  "username" "character varying(30)" [note: 'Username']
+  "birthday" date [note: 'Birthday']
+  "mobile_phone" "character varying(20)" [note: 'Mobile phone number']
+  "email_date_verify" timestamp [note: 'Email date verification']
+  "mobile_phone_date_verify" timestamp [note: 'Mobile phone date verification']
+  "social_network_date_verify" timestamp [note: 'Social network date verification']
+  "date_create" timestamp [not null, note: 'Date create']
+  "date_update" timestamp [not null, note: 'Date update']
+  "last_change_password" timestamp [not null, note: 'Last change password date']
+  "last_state" "character varying(30)" [not null, note: 'Stores the state of the object before it was changed to pending_deleted']
+  "freescout_id" bigint [note: 'FreeScout customer ID']
+
+Indexes {
+  email [type: btree, unique, name: "unq_users_email_constraint"]
+  uid [type: btree, unique, name: "unq_users_uid_constraint"]
+  username [type: btree, unique, name: "unq_users_username_constraint"]
+  uid [type: btree, name: "history_user_uid_index"]
+}
+}
+
+// new
+Table users_social_network_sessions {
+  social_network_sessions_id int [pk, not null, note: 'Social session ID']
+  user_uid uuid [pk, not null, note:'User uid']
+}
+
+Ref: users.uid < users_social_network_sessions.user_uid // many-to-one
+Ref: social_network_sessions.id < users_social_network_sessions.social_network_sessions_id // many-to-one
