@@ -2567,7 +2567,23 @@ type Mutations {
     socialNetworkUserId: String!
   ): AddSocialNetworkIdToExistedUserMutation
 
-  add
+  """
+  Добавить пользователю социальную сеть
+  как способ авторизации
+  """
+  addSocialNetwork(
+    socialNetworkType: SocialNetworkType!
+    socialNetworkUserId: String!
+  ): AddSocialNetworkMutation
+
+  """
+  Удалить у пользователя социальную сеть
+  как способ авторизации
+  """
+  deleteSocialNetwork(
+    socialNetworkType: SocialNetworkType!
+    socialNetworkUserId: String!
+  ): DeleteSocialNetworkMutation
 
   """
   Обновить пользователя
@@ -3950,6 +3966,26 @@ type AddSocialNetworkIdToExistedUserMutation {
   token: String
   refreshToken: String
 }
+
+
+"""
+Добавить пользователю социальную сеть
+как способ авторизации
+"""
+type AddSocialNetworkMutation {
+  success: Boolean
+  failure: FailResponseType
+}
+
+"""
+Удалить у пользователя социальную сеть
+как способ авторизации
+"""
+type DeleteSocialNetworkMutation {
+  success: Boolean
+  failure: FailResponseType
+}
+
 
 """
 Обновить пользователя
