@@ -7,7 +7,6 @@ boundary "Client APP" as GUI
 control "api-service" as AS
 control "vidaq-service" as V
 collections "nginx" as WS
-control "resize-crop-image-service" as IS
 
 
 autonumber
@@ -33,12 +32,8 @@ deactivate AS
 GUI -> WS: GET {host}/{image_name}
 activate WS
 alt #LightBlue "Изобр-е с указанными \nпараметрами отсутствует кэше"
-WS -> IS: GET /images/{image_name}
-activate IS
-IS -> IS: Получаем \nнормализованное \nизображение
-IS -> IS: Применяем \nпреобразования
-IS -> WS: Возвращаем \nобработанное \nизображение
-deactivate IS
+WS -> WS: Получаем \nнормализованное \nизображение
+WS -> WS: Применяем \nпреобразования
 WS -> WS: Сохранияем в кэш
 end alt
 

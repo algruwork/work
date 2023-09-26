@@ -36,11 +36,11 @@ alt "if social_network_session for this socialNetworkId already exist"
 AC -> GUI: success = true, token, refresh token
 GUI -> U: Home page
 else "no social_network_session for this socialNetworkId already exist"
-AC -> AC: Check if user\n - with such email already exist and\n - was registered via email + password and\n - email_date_verify != null
+AC -[#Green]> AC: Check if user\n - with such email already exist and\n - was registered via email + password and\n - email_date_verify != null
 alt "user with such email already exist"
-AC -> DB: create social network session without user_uid
+AC -[#Red]> DB: create social network session without user_uid
 activate DB
-DB -> AC: ok
+DB -[#Red]> AC: ok
 deactivate DB
 AC -> GUI: success = true, userCreated = false, socialNetworkType, socialNetworkId, email
 deactivate AC
@@ -49,7 +49,7 @@ alt "user accept merge request"
 U -> GUI: Accept
 GUI -> AC: mutation addSocialNetworkIdToExistedUser(socialNetworkType, socialNetworkId, email)
 activate AC
-AC -> DB: create add user_uid to social network session
+AC -> DB: add user_uid to social network session
 activate DB
 DB -> AC: ok
 deactivate DB

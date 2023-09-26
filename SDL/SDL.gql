@@ -567,6 +567,11 @@ type Query {
     Оффсет
     """
     offset: Int
+    
+    """
+    Сортировка
+    """
+    sort: PostSortingTypeEnum
   ): PostsType
 
   """
@@ -2224,6 +2229,16 @@ enum PlaylistPostsSortingTypeEnum {
   ORDER_DESC
   VIEWS_ASC
   VIEWS_DESC
+}
+
+"""
+An enumeration.
+"""
+enum PostSortingTypeEnum {
+  DATE_CREATE_ASC
+  DATE_CREATE_DESC
+  VIEWS_COUNT_ASC
+  VIEWS_COUNT_DESC
 }
 
 """

@@ -1,0 +1,52 @@
+@startuml
+start
+
+repeat :Upload video;
+backward :Retry;
+repeat while (Failed?) is (Yes) not (No)
+
+:Edit post page;
+
+if (Upload completed?) then (Yes) 
+    :Title = file name; 
+    if (User filled all\nrequired fields?) then (Yes)
+        split
+            :Save & Publish;
+            :Toaster:\nVideo published;
+            split again
+                :Back;
+                if (Confirm?) then (Yes)
+                    :Save Draft;
+                else (No)
+                    :Edit post page;
+                end
+            endif
+            split again
+                :Cancel;
+                :Toaster:\nVideo deleted;
+        end split
+            :Videos page;
+        end
+    else (No)
+        split
+            :Save;
+        split again
+            :Back;
+             if (Confirm?) then (Yes)
+                :Delete;
+                :Toaster:\nVideo deleted;
+            else (No)
+                :Edit post page;
+                end
+            endif
+        split again
+            :Cancel;
+            :Toaster:\nVideo deleted;
+        end split
+        :Videos page;
+    endif
+else (No)
+    :Uploading progress bar;
+endif
+stop
+@enduml
