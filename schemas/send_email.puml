@@ -1,0 +1,46 @@
+@startuml
+
+title "Send email flow. TO BE"
+
+
+boundary "Client APP" as GUI
+control "access_service" as AC
+control "backoffice" as BO
+
+autonumber
+
+
+GUI -> AC: registrEmail
+activate GUI
+
+note left AC
+or resetPasswordEmail
+or editEmail
+end note
+
+activate AC
+AC -> AC: check REGION in env
+AC -> BO: Get feature-toogles/
+activate BO
+BO -> AC: [toggles]
+deactivate BO
+AC -> AC: filter toggles by region
+AC -> AC: get service_style toogle
+AC -> BO: Get email-templates/
+activate BO
+BO -> AC: [templates]
+deactivate BO
+AC -> AC: filter template
+
+note left AC
+**type** = 
+    REGISTER_BY_EMAIL if mutation registrEmail
+    RESET_PASSWORD_EMAIL if mutation resetPasswordEmail
+    EDIT_EMAIL if mutation editEmail
+**style** = toogles[*].service_style or vidaq
+**language** = env.REGION or EN
+end note
+
+AC -> AC: create message using template
+AC -->: send email
+AC -> GUI: succcess==true
