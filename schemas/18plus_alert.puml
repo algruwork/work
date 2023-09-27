@@ -1,0 +1,14 @@
+@startuml
+
+title "18+ alert"
+boundary "Client APP" as UI
+control "api-service" as AC
+autonumber
+
+alt #LightBlue "User authorized"
+
+else #LightSalmon "User unauthorized"
+
+end alt
+
+@enduml

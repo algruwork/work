@@ -1,0 +1,26 @@
+@startuml
+user << Authorized >> as AU
+user << Unauthorized >>  as UU
+
+AU --> (Watch video)
+UU --> (Watch video)
+(Watch video) <.left. (With age restrictions video): include
+(Watch video) <.right. (Without age restrictions video): include
+
+(Watch video) <.down. (On Main screen): include 
+(My channel) .down.> (In Favorites): extend
+(My channel) .down.> (In Liked): extend
+(Watch video) <.down. (Using direct link): include
+(Watch video) <.down. (On catalog screen): include
+(On catalog screen) .down.> (Trending videos): extend
+(On catalog screen) .down.> (Trending channels): extend
+(Watch video) <.down. (Watch history): include
+(Watch video) <.down. (Channel): include
+(Channel) <.left. (My channel): include
+(Channel) <.down. (Videos): extend
+(Channel) .down.> (Playlists): extend
+(My channel) .down.> (My videos): extend
+(Channel) .down.> (Subscribtions): extend
+(Subscribtions) .down.> (On Videos screen): extend
+(Subscribtions) .down.> (On Channels screen): extend
+@enduml
