@@ -1,14 +1,57 @@
 @startuml
-
+'Return age restriction from back end??
 title "18+ alert"
+
+actor "User" as U
 boundary "Client APP" as UI
 control "api-service" as AC
 autonumber
 
+U -> UI: Watch video
+activate U
+activate UI
+
+UI --> AC: getPosts
+activate AC
+note left AC
+or any other query reciving PostType
+end note
+AC -> UI: [PostType]
+deactivate AC
+
+'проверить на наличие признака мне больше 18 в куках
+
 alt #LightBlue "User authorized"
+'проверить на авторство (авторам всегда даем смотреть видео)
+UI -> AC: query getUser
+activate AC
+AC -> UI: success==true, UserType.birthdate
+deactivate AC
 
-else #LightSalmon "User unauthorized"
-
+alt "UserType.birthdate != null"
+UI -> UI: Calculate age and save "Im 18+" in cookies
+'Request getPosts with ageRestrictions 
+'If Post age restriction > User.age -> black scrin on preview or post page
+end alt
 end alt
 
+
+'Reqeust confirmation that user older than 18+
+alt #LightYellow "If 'I'm 18+' is NOT in cookies"
+UI -> U: Are you 18+?
+U -> UI: Answer
+UI -> UI: Save "Im 18+" sign in cookies
+else "If 'I'm 18+' is in cookies"
+alt #LightPink "If 'I'm 18+' == fasle is in cookies & \nPostType.ageRestriction.code == EIGHTEEN_PLUS"
+
+UI --> UI: apply age restriction screen
+UI --> U: Sorry, this content is age-restricted
+else #LightGreen
+
+UI -> U: Video
+deactivate UI
+deactivate U
+
+end alt
+end alt
 @enduml
